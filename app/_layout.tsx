@@ -9,10 +9,10 @@ import { setAndroidNavigationBar } from "@/lib/android-navigation-bar";
 import { useColorScheme } from "@/lib/useColorScheme";
 import { getItem, setItem } from "@/lib/storage";
 import {
-  Inter_400Regular,
-  Inter_600SemiBold,
+  Poppins_400Regular,
+  Poppins_600SemiBold,
   useFonts,
-} from "@expo-google-fonts/inter";
+} from "@expo-google-fonts/poppins";
 import { useEffect } from "react";
 
 export {
@@ -31,8 +31,8 @@ export default function RootLayout() {
   const { colorScheme, setColorScheme } = useColorScheme();
 
   const [loaded, error] = useFonts({
-    Inter_400Regular,
-    Inter_600SemiBold,
+    Poppins_400Regular,
+    Poppins_600SemiBold,
   });
 
   useEffect(() => {
