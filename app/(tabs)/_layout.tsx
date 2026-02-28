@@ -1,18 +1,20 @@
 import { Tabs } from "expo-router";
 import { AlarmClock } from "@/components/Icons";
+import { useColorScheme } from "@/lib/theme/useColorScheme";
 
 export const unstable_settings = {
   initialRouteName: "index",
 };
 
 export default function TabLayout() {
+  const { colors } = useColorScheme();
   return (
     <Tabs>
       <Tabs.Screen
         name="index"
         options={{
-          title: "Alarms",
-          tabBarIcon: () => <AlarmClock size={24} color="black" />,
+          title: "",
+          tabBarIcon: () => <AlarmClock size={24} color={colors.foreground} />,
         }}
       />
     </Tabs>

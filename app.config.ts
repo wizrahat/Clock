@@ -2,14 +2,13 @@ import type { ConfigContext, ExpoConfig } from "@expo/config";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "Expo Starter",
-  slug: "expostarter",
+  name: "Clock",
+  slug: "clock",
   newArchEnabled: true,
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
-  scheme: "ltstarter",
-  userInterfaceStyle: "dark",
+  scheme: "clock",
   runtimeVersion: {
     policy: "appVersion",
   },
@@ -37,7 +36,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     output: "static",
     favicon: "./assets/images/favicon.png",
   },
-  plugins: ["expo-router", "expo-sqlite", "expo-font", "expo-web-browser"],
+  plugins: ["expo-router", "expo-sqlite", "expo-font"],
   experiments: {
     typedRoutes: true,
     baseUrl: "/expo-local-first-template",

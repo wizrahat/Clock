@@ -2,7 +2,7 @@ import { storage } from "@/lib/storage";
 import { Pressable, View } from "react-native";
 import { MoonStar, Sun } from "@/components/Icons";
 import { setAndroidNavigationBar } from "@/lib/android-navigation-bar";
-import { useColorScheme } from "@/lib/useColorScheme";
+import { useColorScheme } from "@/lib/theme/useColorScheme";
 import { cn } from "@/lib/utils";
 
 export function ThemeToggle() {

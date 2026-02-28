@@ -1,10 +1,10 @@
 import { Text, View } from "react-native";
 
 type Props = {};
-export const Alarms = ({ }: Props) => {
+export default function Alarms({ }: Props) {
   return (
-    <View className="flex-1">
-      <Text className="text-base">Alarms Component</Text>
+    <View className="flex-1 bg-background">
+      <Text className="text-foreground">Alarms Component</Text>
     </View>
   );
 };

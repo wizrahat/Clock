@@ -6,7 +6,7 @@ import * as React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { DatabaseProvider } from "@/db/provider";
 import { setAndroidNavigationBar } from "@/lib/android-navigation-bar";
-import { useColorScheme } from "@/lib/useColorScheme";
+import { useColorScheme } from "@/lib/theme/useColorScheme";
 import { getItem, setItem } from "@/lib/storage";
 import {
   Poppins_400Regular,
@@ -14,6 +14,9 @@ import {
   useFonts,
 } from "@expo-google-fonts/poppins";
 import { useEffect } from "react";
+import { ThemeProvider } from "@react-navigation/native";
+import { NAV_THEME } from "@/lib/theme";
+import { set } from "zod";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -36,17 +39,8 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    const theme = getItem("theme");
-    if (!theme) {
-      setAndroidNavigationBar(colorScheme);
-      setItem("theme", colorScheme);
-      return;
-    }
-    const colorTheme = theme === "dark" ? "dark" : "light";
-    setAndroidNavigationBar(colorTheme);
-    if (colorTheme !== colorScheme) {
-      setColorScheme(colorTheme);
-    }
+    setColorScheme("light");
+    setAndroidNavigationBar(colorScheme);
   }, []);
 
   useEffect(() => {
@@ -57,17 +51,22 @@ export default function RootLayout() {
 
   return (
     <DatabaseProvider>
-      <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <BottomSheetModalProvider>
-          <Stack>
-            <Stack.Screen
-              name="(tabs)"
-              options={{ title: "Alarms", headerShown: false }}
-            />
-          </Stack>
-        </BottomSheetModalProvider>
-      </GestureHandlerRootView>
+      <ThemeProvider value={NAV_THEME[colorScheme]}>
+        <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+        <GestureHandlerRootView
+          style={{ flex: 1 }}
+          className={colorScheme === "dark" ? "dark" : ""}
+        >
+          <BottomSheetModalProvider>
+            <Stack>
+              <Stack.Screen
+                name="(tabs)"
+                options={{ title: "Alarms", headerShown: false }}
+              />
+            </Stack>
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
+      </ThemeProvider>
     </DatabaseProvider>
   );
 }
