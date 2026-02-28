@@ -1,6 +1,5 @@
-import {List} from '@/lib/icons/List';
-import {Settings} from '@/lib/icons/Settings';
-import {Tabs} from 'expo-router';
+import { Tabs } from "expo-router";
+import { AlarmClock } from "@/components/Icons";
 
 export const unstable_settings = {
   initialRouteName: "index",
@@ -8,19 +7,12 @@ export const unstable_settings = {
 
 export default function TabLayout() {
   return (
-    <Tabs >
+    <Tabs>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Habits',
-          tabBarIcon: () => <List className="text-foreground" />,
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: 'Settings',
-          tabBarIcon: () => <Settings className="text-foreground" />,
+          title: "Alarms",
+          tabBarIcon: () => <AlarmClock size={24} color="black" />,
         }}
       />
     </Tabs>

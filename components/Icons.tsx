@@ -1,7 +1,7 @@
 import {
   Activity,
   Airplay,
-  AlarmClockIcon,
+  AlarmClock,
   AlertCircle,
   AlertTriangle,
   AlignCenter,
@@ -56,7 +56,7 @@ import {
   Users,
   X,
 } from "lucide-react-native";
-import {cssInterop} from "nativewind";
+import { cssInterop } from "nativewind";
 function interopIcon(icon: LucideIcon) {
   cssInterop(icon, {
     className: {
@@ -74,7 +74,7 @@ interopIcon(MoonStar);
 interopIcon(AlignJustify);
 interopIcon(Activity);
 interopIcon(Airplay);
-interopIcon(AlarmClockIcon);
+interopIcon(AlarmClock);
 interopIcon(AlertCircle);
 interopIcon(AlignRight);
 interopIcon(Baby);
@@ -126,7 +126,7 @@ interopIcon(CheckSquare);
 export {
   Activity,
   Airplay,
-  AlarmClockIcon,
+  AlarmClock,
   AlertCircle,
   AlertTriangle,
   AlignCenter,
