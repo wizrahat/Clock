@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import { AlarmClock } from "@/components/Icons";
-import { useColorScheme } from "@/lib/theme/useColorScheme";
+import { useColorScheme } from "@/lib/useColorScheme";
 
 export const unstable_settings = {
   initialRouteName: "index",

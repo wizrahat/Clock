@@ -27,4 +27,5 @@ config.server.enhanceMiddleware = (middleware) => {
 module.exports = withNativeWind(config, {
   input: "./app/global.css",
   configPath: "./tailwind.config.ts",
+  inlineRem: 16,
 });

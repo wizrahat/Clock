@@ -6,8 +6,7 @@ import * as React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { DatabaseProvider } from "@/db/provider";
 import { setAndroidNavigationBar } from "@/lib/android-navigation-bar";
-import { useColorScheme } from "@/lib/theme/useColorScheme";
-import { getItem, setItem } from "@/lib/storage";
+import { useColorScheme } from "@/lib/useColorScheme";
 import {
   Poppins_400Regular,
   Poppins_600SemiBold,
@@ -16,7 +15,8 @@ import {
 import { useEffect } from "react";
 import { ThemeProvider } from "@react-navigation/native";
 import { NAV_THEME } from "@/lib/theme";
-import { set } from "zod";
+import { getItem, setItem } from "@/lib/storage";
+import { PortalHost } from "@rn-primitives/portal";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -31,7 +31,7 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const { colorScheme, setColorScheme } = useColorScheme();
+  const { colorScheme, setColorScheme, toggleColorScheme } = useColorScheme();
 
   const [loaded, error] = useFonts({
     Poppins_400Regular,
@@ -39,8 +39,14 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    setColorScheme("light");
-    setAndroidNavigationBar(colorScheme);
+    const theme = getItem("theme");
+    if (!theme) {
+      setItem("theme", colorScheme);
+    }
+    const colorTheme =
+      theme === "light" || theme === "dark" ? theme : colorScheme;
+    setColorScheme(colorTheme);
+    setAndroidNavigationBar(colorTheme);
   }, []);
 
   useEffect(() => {
@@ -66,6 +72,7 @@ export default function RootLayout() {
             </Stack>
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
+        <PortalHost />
       </ThemeProvider>
     </DatabaseProvider>
   );
