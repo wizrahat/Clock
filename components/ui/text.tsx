@@ -42,7 +42,7 @@ const textVariants = cva(
   }
 );
 
-type TextVariantProps = VariantProps<typeof textVariants>;
+export type TextVariantProps = VariantProps<typeof textVariants>;
 
 type TextVariant = NonNullable<TextVariantProps['variant']>;
 

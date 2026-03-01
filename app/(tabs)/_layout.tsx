@@ -14,7 +14,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "",
-          tabBarIcon: () => <AlarmClock size={24} color={colors.foreground} />,
+          tabBarIcon: () => <AlarmClock size={24} color={colors.primary} />,
         }}
       />
     </Tabs>
