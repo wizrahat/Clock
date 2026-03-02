@@ -8,7 +8,7 @@ export function useColorScheme() {
   return {
     colors: THEME[colorScheme ?? "light"],
     colorScheme: colorScheme ?? "light",
-    isDarkColorScheme: colorScheme === "light",
+    isDarkColorScheme: colorScheme === "dark",
     setColorScheme,
     toggleColorScheme,
   };

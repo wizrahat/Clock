@@ -46,6 +46,7 @@ export default function RootLayout() {
     const theme = getItem("theme");
     if (!theme) {
       setItem("theme", colorScheme);
+      return;
     }
     const colorTheme =
       theme === "light" || theme === "dark" ? theme : colorScheme;
