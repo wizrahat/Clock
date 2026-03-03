@@ -4,7 +4,6 @@ import { useColorScheme } from "@/lib/useColorScheme";
 import { PenBox } from "lucide-react-native";
 import { StyleSheet, View } from "react-native";
 import { BlurView } from 'expo-blur';
-import { is } from "drizzle-orm";
 
 
 export default function TabLayout() {
@@ -13,7 +12,7 @@ export default function TabLayout() {
     <Tabs screenOptions={{
       headerShown: false,
       tabBarActiveTintColor: colors.primary,
-      tabBarInactiveTintColor: isDarkColorScheme ? "hsl(0 0% 70%)" : "hsl(0 0% 40%)", // temporary until we have a full color system
+      tabBarInactiveTintColor: isDarkColorScheme ? "hsl(0 0% 70%)" : "hsl(0 0% 50%)", // temporary until we have a full color system
       tabBarStyle: {
         backgroundColor: 'transparent',
         position: 'absolute',
