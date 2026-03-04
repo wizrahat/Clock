@@ -23,7 +23,7 @@ export default function TabLayout() {
       tabBarBackground: () => (
         <View style={{
           flex: 1, overflow: 'hidden',
-          boxShadow: `inset 0 0px 0px, 0 3px ${isDarkColorScheme ? "6px" : "5px"} ${colors.foreground}`,
+          boxShadow: `inset 0 0px 0px, 0 3px ${isDarkColorScheme ? "6px" : "5px"} ${colors.foreground}`, // temporary until we have a full color system
         }}
           className="rounded-md">
           <BlurView
@@ -35,8 +35,8 @@ export default function TabLayout() {
             StyleSheet.absoluteFill,
             {
               backgroundColor: isDarkColorScheme
-                ? 'rgba(0,0,0,0.5)'
-                : 'rgba(255,255,255,0.6)'
+                ? 'rgba(0,0,0,0.5)' // temporary until we have a full color system but will try to keep it just like this
+                : 'rgba(255,255,255,0.7)' // temporary until we have a full color system, a proper screen and filled icons to test the contrast on so we can adjust the white value to see how less whte we can keep
             }
           ]} />
         </View>
@@ -90,3 +90,4 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+//TODO: test on android
