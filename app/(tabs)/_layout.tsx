@@ -2,7 +2,7 @@ import { Tabs } from "expo-router";
 import { AlarmClock } from "@/components/common/Icons";
 import { useColorScheme } from "@/lib/useColorScheme";
 import { PenBox } from "lucide-react-native";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { BlurView } from 'expo-blur';
 
 
@@ -30,13 +30,14 @@ export default function TabLayout() {
             intensity={40}
             tint="light"
             style={StyleSheet.absoluteFill}
+            experimentalBlurMethod="dimezisBlurView"
           />
           <View style={[
             StyleSheet.absoluteFill,
             {
               backgroundColor: isDarkColorScheme
                 ? 'rgba(0,0,0,0.5)' // temporary until we have a full color system but will try to keep it just like this
-                : 'rgba(255,255,255,0.7)' // temporary until we have a full color system, a proper screen and filled icons to test the contrast on so we can adjust the white value to see how less whte we can keep
+                : Platform.OS === 'ios' ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.3)' // temporary until we have a full color system, a proper screen and filled icons to test the contrast on so we can adjust the white value to see how less whte we can keep
             }
           ]} />
         </View>
