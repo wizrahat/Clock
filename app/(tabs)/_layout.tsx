@@ -12,7 +12,7 @@ export default function TabLayout() {
     <Tabs screenOptions={{
       headerShown: false,
       tabBarActiveTintColor: colors.primary,
-      tabBarInactiveTintColor: isDarkColorScheme ? "hsl(0 0% 70%)" : "hsl(0 0% 50%)", // temporary until we have a full color system
+      tabBarInactiveTintColor: colors.mutedForeground,
       tabBarStyle: {
         backgroundColor: 'transparent',
         position: 'absolute',
