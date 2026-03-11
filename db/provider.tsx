@@ -1,20 +1,19 @@
-import type { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
 import React, {
   type PropsWithChildren,
   useContext,
   useEffect,
   useState,
 } from "react";
-import { initialize } from "./drizzle";
+import { Database, initialize } from "./drizzle";
 
-type ContextType = { db: ExpoSQLiteDatabase | null };
+type ContextType = { db: Database | null };
 
 export const DatabaseContext = React.createContext<ContextType>({ db: null });
 
 export const useDatabase = () => useContext(DatabaseContext);
 
 export function DatabaseProvider({ children }: PropsWithChildren) {
-  const [db, setDb] = useState<ExpoSQLiteDatabase | null>(null);
+  const [db, setDb] = useState<Database | null>(null);
 
   useEffect(() => {
     if (db) return;
