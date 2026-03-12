@@ -5,6 +5,9 @@ import React, {
   useState,
 } from "react";
 import { Database, initialize } from "./drizzle";
+import { runMigrations } from "./migrate";
+import { db } from "./drizzle";
+import { AlarmsTable } from "./schema";
 
 type ContextType = { db: Database | null };
 
@@ -13,17 +16,50 @@ export const DatabaseContext = React.createContext<ContextType>({ db: null });
 export const useDatabase = () => useContext(DatabaseContext);
 
 export function DatabaseProvider({ children }: PropsWithChildren) {
-  const [db, setDb] = useState<Database | null>(null);
+  const [database, setDatabase] = useState<Database | null>(null);
 
   useEffect(() => {
-    if (db) return;
-    initialize().then((newDb) => {
-      setDb(newDb);
+    if (database) return;
+    initialize().then(async (newDb) => {
+      await runMigrations();
+
+      // run once
+      const existing = await db.select().from(AlarmsTable);
+      if (existing.length === 0) {
+        await db.insert(AlarmsTable).values([
+          {
+            label: "Wake Up",
+            time: "07:00",
+            isActive: true,
+            scheduleType: "repeat",
+            repeatDays: [1, 2, 3, 4, 5],
+            specificDates: [],
+          },
+          {
+            label: "Gym",
+            time: "06:00",
+            isActive: false,
+            scheduleType: "repeat",
+            repeatDays: [1, 3, 5],
+            specificDates: [],
+          },
+          {
+            label: "Alarm",
+            time: "09:00",
+            isActive: false,
+            scheduleType: "once",
+            repeatDays: [],
+            specificDates: [],
+          },
+        ]);
+      }
+
+      setDatabase(newDb);
     });
   }, []);
 
   return (
-    <DatabaseContext.Provider value={{ db }}>
+    <DatabaseContext.Provider value={{ db: database }}>
       {children}
     </DatabaseContext.Provider>
   );

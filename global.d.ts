@@ -5,3 +5,7 @@ declare module "react-native-svg" {
     className?: string;
   }
 }
+declare module '*.sql' {
+  const content: string
+  export default content
+}
