@@ -3,7 +3,7 @@ import { Text as RNText } from "react-native";
 
 
 type Props = {
-  children: string;
+  children: any;
   font?: "Poppins_400Regular" | "Poppins_500Medium" | "Poppins_600SemiBold" | "Poppins_700Bold";
   fontSize?: number;
 };
