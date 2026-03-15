@@ -21,13 +21,13 @@ export default function Alarms({ }: Props) {
 
   const alarms = db.select().from(AlarmsTable).all();
 
-  const nextAlarm = alarms.filter(alarm => alarm.isActive).sort((a, b) => a.time.localeCompare(b.time))[0];
+  const nextAlarm = alarms.filter(alarm => alarm.isActive).sort((a, b) => a.time - b.time)[0];
   const timeTillNextAlarm = getTimeTillNext(nextAlarm.time, currentTime)
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date())
-    }, 60000);
+    }, 30000);
     return () => clearInterval(interval);
   }, []);
 

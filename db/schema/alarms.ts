@@ -1,5 +1,5 @@
 
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, int } from "drizzle-orm/sqlite-core";
 import { createId } from "@paralleldrive/cuid2";
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod";
 import type { z } from "zod";
@@ -12,7 +12,7 @@ export const AlarmsTable = sqliteTable("alarms", {
     mode: "boolean",
   }).default(false).notNull(),
   createdAt: integer({mode:"timestamp"}).$defaultFn(() => new Date()).notNull(),
-  time: text().notNull(),
+  time: int().notNull(),
   specificDates: text({ mode: "json" }).$type<string[]>().default([]).notNull(),
   scheduleType: text().$type<"once" | "repeat" | "specific">().default("once").notNull(),
   repeatDays: text({ mode: "json" }).$type<number[]>().default([]).notNull(),

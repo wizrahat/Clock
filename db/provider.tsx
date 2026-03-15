@@ -23,13 +23,12 @@ export function DatabaseProvider({ children }: PropsWithChildren) {
     initialize().then(async (newDb) => {
       await runMigrations();
 
-      // run once
       const existing = await db.select().from(AlarmsTable);
       if (existing.length === 0) {
         await db.insert(AlarmsTable).values([
           {
             label: "Wake Up",
-            time: "07:00",
+            time: 420, // 07:00
             isActive: true,
             scheduleType: "repeat",
             repeatDays: [1, 2, 3, 4, 5],
@@ -37,7 +36,7 @@ export function DatabaseProvider({ children }: PropsWithChildren) {
           },
           {
             label: "Gym",
-            time: "06:00",
+            time: 360, // 06:00
             isActive: false,
             scheduleType: "repeat",
             repeatDays: [1, 3, 5],
@@ -45,7 +44,7 @@ export function DatabaseProvider({ children }: PropsWithChildren) {
           },
           {
             label: "Alarm",
-            time: "09:00",
+            time: 540, // 09:00
             isActive: false,
             scheduleType: "once",
             repeatDays: [],
