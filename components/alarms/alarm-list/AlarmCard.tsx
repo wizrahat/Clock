@@ -2,6 +2,7 @@ import { Text } from "@/components/common/Text";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Alarm } from "@/db/schema";
+import { formatTime } from "@/lib/utils";
 import { useState } from "react";
 import { View } from "react-native";
 
@@ -16,7 +17,7 @@ export default function AlarmCard({ alarm }: { alarm: Alarm }) {
       <CardContent className="flex-row items-center justify-between">
         <View className="flex justify-center items-start ">
           <Text className="text-sm text-muted-foreground mb-2">{label}</Text>
-          <Text className="text-3xl font-bold text-foreground" font="Poppins_600SemiBold">{time}</Text>
+          <Text className="text-3xl font-bold text-foreground" font="Poppins_600SemiBold">{formatTime(time)}</Text>
           <Text className="text-sm text-muted-foreground">{scheduleLabel}</Text>
         </View>
         <Switch className="scale-[1.4] " checked={isToggleActive} onCheckedChange={() => setIsToggleActive(!isToggleActive)} />
