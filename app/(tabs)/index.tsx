@@ -9,8 +9,7 @@ import { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@/components/ui/button";
-import { addDays, differenceInMinutes, parse } from "date-fns";
-import { formatTime, getTimeTillNext } from "@/lib/utils";
+import { getTimeTillNext } from "@/lib/utils";
 import { useDatabase } from "@/db/provider";
 
 
@@ -33,7 +32,7 @@ export default function Alarms({ }: Props) {
   const alarms = db.select().from(AlarmsTable).all();
 
   const nextAlarm = alarms.filter(alarm => alarm.isActive).sort((a, b) => a.time - b.time)[0];
-  const timeTillNextAlarm = getTimeTillNext(nextAlarm.time, currentTime)
+  const timeTillNextAlarm = nextAlarm ? getTimeTillNext(nextAlarm.time, currentTime) : null
 
 
 
@@ -41,9 +40,11 @@ export default function Alarms({ }: Props) {
     <SafeAreaView className="flex-1 bg-background" >
       <ThemeToggle />
       <View className="items-center justify-center gap-2 pt-16 pb-8">
-        <Text className="text-base text-muted-foreground">Time until next alarm</Text>
-        <Text className="text-4xl font-bold text-foreground -mb-3" font="Poppins_600SemiBold">{timeTillNextAlarm}</Text>
-        <Text className="text-xl text-primary">{formatTime(nextAlarm.time)}</Text>
+        {nextAlarm ? (<><Text className="text-base text-muted-foreground">Time until next alarm</Text>
+          <Text className="text-4xl font-bold text-foreground -mb-3" font="Poppins_600SemiBold">{timeTillNextAlarm}</Text>
+          <Text className="text-xl text-primary">{nextAlarm.label}</Text></>) :
+          (<Text>No active alarms</Text>)}
+
       </View>
       {/* <View className="w-[90%] mx-auto h-[1px] bg-muted" /> */}
 
