@@ -1,8 +1,6 @@
 import { AlarmCard } from "@/components/alarms/alarm-list";
 import { Text } from "@/components/common/Text";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
-import { db } from "@/db/drizzle";
-import { AlarmsTable } from "@/db/schema";
 import { useColorScheme } from "@/lib/useColorScheme";
 import { EllipsisVertical, Plus } from "lucide-react-native";
 import { useEffect, useState } from "react";
@@ -10,15 +8,19 @@ import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@/components/ui/button";
 import { getTimeTillNext } from "@/lib/utils";
-import { useDatabase } from "@/db/provider";
+import { useAlarmStore } from "@/store/alarms";
 
 
 type Props = {};
 export default function Alarms({ }: Props) {
   const [currentTime, setCurrentTime] = useState(new Date())
 
+  const alarms = useAlarmStore(state => state.alarms)
   const { colors } = useColorScheme();
-  const { db: database } = useDatabase()
+  const nextAlarm = alarms?.filter(alarm => alarm.isActive).sort((a, b) => b.time - a.time)[0]
+  const timeTillNextAlarm = nextAlarm ? getTimeTillNext(nextAlarm.time, currentTime) : null
+
+
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -27,12 +29,6 @@ export default function Alarms({ }: Props) {
     return () => clearInterval(interval);
   }, []);
 
-  if (!database) return null
-
-  const alarms = db.select().from(AlarmsTable).all();
-
-  const nextAlarm = alarms.filter(alarm => alarm.isActive).sort((a, b) => a.time - b.time)[0];
-  const timeTillNextAlarm = nextAlarm ? getTimeTillNext(nextAlarm.time, currentTime) : null
 
 
 
@@ -55,7 +51,7 @@ export default function Alarms({ }: Props) {
         </View>
       </View>
       <ScrollView contentContainerClassName="gap-2.5" className="flex-1 px-2  bg-background mt-2.5">
-        {alarms.map(alarm => <AlarmCard key={alarm.id} alarm={alarm} />)}
+        {alarms?.map(alarm => <AlarmCard key={alarm.id} id={alarm.id} />)}
       </ScrollView>
     </SafeAreaView>
   );

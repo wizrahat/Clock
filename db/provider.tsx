@@ -8,6 +8,7 @@ import { Database, initialize } from "./drizzle";
 import { runMigrations } from "./migrate";
 import { db } from "./drizzle";
 import { AlarmsTable } from "./schema";
+import { loadAlarms } from "@/lib/alarms";
 
 type ContextType = { db: Database | null };
 
@@ -52,8 +53,9 @@ export function DatabaseProvider({ children }: PropsWithChildren) {
           },
         ]);
       }
-
+      await loadAlarms()
       setDatabase(newDb);
+
     });
   }, []);
 

@@ -1,21 +1,22 @@
 import { Text } from "@/components/common/Text";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { db } from "@/db/drizzle";
-import { Alarm, AlarmsTable } from "@/db/schema";
+import { updateAlarm } from "@/lib/alarms";
 import { formatTime } from "@/lib/utils";
-import { eq } from "drizzle-orm";
+import { useAlarmStore } from "@/store/alarms";
 import { View } from "react-native";
 
-export default function AlarmCard({ alarm }: { alarm: Alarm }) {
-  const { id, isActive, label, time, scheduleType, specificDates, repeatDays } = alarm;
+export default function AlarmCard({ id }: { id: string }) {
+  const alarm = useAlarmStore(state => state.alarms?.find(alarm => alarm.id === id))
+
+  if (!alarm) return null
+
+  const { isActive, label, time, scheduleType } = alarm
   const scheduleLabel = scheduleType === "once" ? "Once" : scheduleType === "repeat" ? "Repeat" : "Specific";
 
 
   const handleToggle = async (isActive: boolean) => {
-    await db.update(AlarmsTable)
-      .set({ isActive })
-      .where(eq(AlarmsTable.id, id))
+    await updateAlarm(id, { isActive })
   }
 
   return (

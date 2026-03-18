@@ -7,11 +7,11 @@ export const AlarmsTable = sqliteTable("alarms", {
   id: text()
     .$defaultFn(() => createId())
     .notNull(),
-  label: text().$default(()=>"Alarm").notNull(),
+  label: text().$default(() => "Alarm").notNull(),
   isActive: integer({
     mode: "boolean",
   }).default(false).notNull(),
-  createdAt: integer({mode:"timestamp"}).$defaultFn(() => new Date()).notNull(),
+  createdAt: integer({ mode: "timestamp" }).$defaultFn(() => new Date()).notNull(),
   time: int().notNull(),
   specificDates: text({ mode: "json" }).$type<string[]>().default([]).notNull(),
   scheduleType: text().$type<"once" | "repeat" | "specific">().default("once").notNull(),
