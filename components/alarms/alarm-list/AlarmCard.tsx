@@ -1,10 +1,9 @@
 import { Text } from "@/components/common/Text";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { db } from "@/db/drizzle";
 import { Alarm, AlarmsTable } from "@/db/schema";
+import { updateAlarm } from "@/lib/alarms";
 import { formatTime } from "@/lib/utils";
-import { eq } from "drizzle-orm";
 import { View } from "react-native";
 
 export default function AlarmCard({ alarm }: { alarm: Alarm }) {
@@ -13,9 +12,7 @@ export default function AlarmCard({ alarm }: { alarm: Alarm }) {
 
 
   const handleToggle = async (isActive: boolean) => {
-    await db.update(AlarmsTable)
-      .set({ isActive })
-      .where(eq(AlarmsTable.id, id))
+    await updateAlarm(id, { isActive })
   }
 
   return (

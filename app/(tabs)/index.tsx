@@ -11,14 +11,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@/components/ui/button";
 import { getTimeTillNext } from "@/lib/utils";
 import { useDatabase } from "@/db/provider";
+import { useLiveQuery } from "drizzle-orm/expo-sqlite";
 
 
 type Props = {};
 export default function Alarms({ }: Props) {
   const [currentTime, setCurrentTime] = useState(new Date())
 
+  const { data: alarms } = useLiveQuery(db.select().from(AlarmsTable))
   const { colors } = useColorScheme();
   const { db: database } = useDatabase()
+
+  const nextAlarm = alarms.filter(alarm => alarm.isActive).sort((a, b) => b.time - a.time)[0];
+  const timeTillNextAlarm = nextAlarm ? getTimeTillNext(nextAlarm.time, currentTime) : null
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -29,19 +34,13 @@ export default function Alarms({ }: Props) {
 
   if (!database) return null
 
-  const alarms = db.select().from(AlarmsTable).all();
-
-  const nextAlarm = alarms.filter(alarm => alarm.isActive).sort((a, b) => a.time - b.time)[0];
-  const timeTillNextAlarm = nextAlarm ? getTimeTillNext(nextAlarm.time, currentTime) : null
-
-
 
   return (
     <SafeAreaView className="flex-1 bg-background" >
       <ThemeToggle />
       <View className="items-center justify-center gap-2 pt-16 pb-8">
         {nextAlarm ? (<><Text className="text-base text-muted-foreground">Time until next alarm</Text>
-          <Text className="text-4xl font-bold text-foreground -mb-3" font="Poppins_600SemiBold">{timeTillNextAlarm}</Text>
+          <Text className="text-3xl font-bold text-foreground -mb-2" font="Poppins_600SemiBold">{timeTillNextAlarm}</Text>
           <Text className="text-xl text-primary">{nextAlarm.label}</Text></>) :
           (<Text>No active alarms</Text>)}
 
