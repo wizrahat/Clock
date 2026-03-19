@@ -25,7 +25,7 @@ export default function AlarmCard({ alarm }: { alarm: Alarm }) {
           <Text className="text-3xl font-bold text-foreground" font="Poppins_500Medium">{formatTime(time)}</Text>
           <Text className="text-sm text-muted-foreground">{scheduleLabel}</Text>
         </View>
-        <Switch className="scale-[1.4]" checked={isActive} onCheckedChange={handleToggle} />
+        <Switch className="scale-[1.4] mr-0.5 transition-all" checked={isActive} onCheckedChange={handleToggle} />
       </CardContent>
     </Card>
   )

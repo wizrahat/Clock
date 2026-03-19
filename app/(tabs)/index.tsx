@@ -22,7 +22,7 @@ export default function Alarms({ }: Props) {
   const { colors } = useColorScheme();
   const { db: database } = useDatabase()
 
-  const nextAlarm = alarms.filter(alarm => alarm.isActive).sort((a, b) => b.time - a.time)[0];
+  const nextAlarm = alarms.filter(alarm => alarm.isActive).sort((a, b) => a.time - b.time)[0];
   const timeTillNextAlarm = nextAlarm ? getTimeTillNext(nextAlarm.time, currentTime) : null
 
   useEffect(() => {
