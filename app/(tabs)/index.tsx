@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@/components/ui/button";
-import { getTimeTillNext } from "@/lib/utils";
+import { formatTime, getTimeTillNext } from "@/lib/utils";
 import { useDatabase } from "@/db/provider";
 import { useLiveQuery } from "drizzle-orm/expo-sqlite";
 
@@ -38,23 +38,25 @@ export default function Alarms({ }: Props) {
   return (
     <SafeAreaView className="flex-1 bg-background" >
       <ThemeToggle />
-      <View className="items-center justify-center gap-2 pt-16 pb-8">
-        {nextAlarm ? (<><Text className="text-base text-muted-foreground">Time until next alarm</Text>
-          <Text className="text-3xl font-bold text-foreground -mb-2" font="Poppins_600SemiBold">{timeTillNextAlarm}</Text>
-          <Text className="text-xl text-primary">{nextAlarm.label}</Text></>) :
+      <View className="items-center justify-center gap-2.5 pt-16 pb-8">
+        {nextAlarm ? (<><Text className="text-base text-muted-foreground">Next alarm</Text>
+          <Text className="text-4xl font-bold text-foreground -mb-2.5" font="Poppins_600SemiBold">{timeTillNextAlarm}</Text>
+          <Text className="text-xl text-primary" font="Poppins_500Medium">{formatTime(nextAlarm.time)} · {nextAlarm.label}</Text>  {/* add some subtle teal hint */}
+        </>) :
           (<Text>No active alarms</Text>)}
 
       </View>
       {/* <View className="w-[90%] mx-auto h-[1px] bg-muted" /> */}
 
-      <View className="px-2.5 w-full" >
-        <View className="items-center justify-end flex-row gap-2.5 pt-4">
-          <Button variant="outline" className="w-8 h-8 bg-card" ><Plus color={colors.foreground} size={20} /></Button>
-          <Button variant="outline" className="w-8 h-8 bg-card" ><EllipsisVertical color={colors.foreground} size={20} /></Button>
+      <View className="px-3.5 w-full  flex-row items-center justify-between" >
+        <Text font="Poppins_500Medium" className="text-2xl pl-2.5">Alarms</Text>
+        <View className="items-center justify-end flex-row gap-2.5">
+          <Button variant="ghost" className="w-8 h-8 bg-card shadow-sm shadow-black/5" ><Plus color={colors.foreground} size={20} /></Button>
+          <Button variant="ghost" className="w-8 h-8 bg-card shadow-sm shadow-black/5" ><EllipsisVertical color={colors.foreground} size={20} /></Button>
         </View>
       </View>
-      <ScrollView contentContainerClassName="gap-2.5" className="flex-1 px-2  bg-background mt-2.5">
-        {alarms.map(alarm => <AlarmCard key={alarm.id} alarm={alarm} />)}
+      <ScrollView contentContainerClassName="gap-2.5" className="flex-1 px-2.5  bg-background mt-2.5">
+        {alarms.map(alarm => <AlarmCard key={alarm.id} alarm={alarm} />)} {/* add some subtle teal hint */}
       </ScrollView>
     </SafeAreaView>
   );

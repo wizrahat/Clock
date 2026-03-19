@@ -16,16 +16,16 @@ export default function AlarmCard({ alarm }: { alarm: Alarm }) {
   }
 
   return (
-    <Card className="bg-card py-2" style={{
+    <Card className="bg-card py-2.5 transition-all" style={{
       opacity: isActive ? 1 : 0.5
     }} >
-      <CardContent className="flex-row items-center justify-between">
-        <View className="flex justify-center items-start ">
-          <Text className="text-sm text-muted-foreground mb-2">{label}</Text>
-          <Text className="text-3xl font-bold text-foreground" font="Poppins_600SemiBold">{formatTime(time)}</Text>
+      <CardContent className="flex-row items-center justify-between px-3.5">
+        <View className="flex justify-center items-start gap-0.5 ">
+          <Text className="text-sm text-muted-foreground mb-1.5">{label}</Text>
+          <Text className="text-3xl font-bold text-foreground" font="Poppins_500Medium">{formatTime(time)}</Text>
           <Text className="text-sm text-muted-foreground">{scheduleLabel}</Text>
         </View>
-        <Switch className="scale-[1.4] " checked={isActive} onCheckedChange={handleToggle} />
+        <Switch className="scale-[1.4]" checked={isActive} onCheckedChange={handleToggle} />
       </CardContent>
     </Card>
   )

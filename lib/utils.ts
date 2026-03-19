@@ -10,7 +10,7 @@ export function formatTime(totalMinutes: number, type?: "display") {
   const minutes = totalMinutes % 60
   switch (type) {
     case "display":
-      return `${hours ? hours + " hours" : ""} ${minutes ? minutes + " minutes" : ""}`.trim()
+      return `${hours ? hours + "h" : ""} ${minutes ? minutes + "m" : ""}`.trim()
     default:
       return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
   }
