@@ -1,32 +1,33 @@
-import "./global.css";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { SplashScreen, Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import * as React from "react";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { DatabaseProvider } from "@/db/provider";
-import { setAndroidNavigationBar } from "@/lib/android-navigation-bar";
-import { useColorScheme } from "@/lib/useColorScheme";
+import './global.css';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { SplashScreen, Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import * as React from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { DatabaseProvider } from '@/db/provider';
+import { setAndroidNavigationBar } from '@/lib/android-navigation-bar';
+import { useColorScheme } from '@/lib/useColorScheme';
 import {
   Poppins_400Regular,
   Poppins_500Medium,
   Poppins_600SemiBold,
   Poppins_700Bold,
   useFonts,
-} from "@expo-google-fonts/poppins";
-import { useEffect } from "react";
-import { ThemeProvider } from "@react-navigation/native";
-import { NAV_THEME } from "@/lib/theme";
-import { getItem, setItem } from "@/lib/storage";
-import { PortalHost } from "@rn-primitives/portal";
+} from '@expo-google-fonts/poppins';
+import { useEffect } from 'react';
+import { ThemeProvider } from '@react-navigation/native';
+import { NAV_THEME } from '@/lib/theme';
+import { getItem, setItem } from '@/lib/storage';
+import { PortalHost } from '@rn-primitives/portal';
+import { View } from 'react-native';
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
-} from "expo-router";
+} from 'expo-router';
 
 export const unstable_settings = {
-  initialRouteName: "(tabs)",
+  initialRouteName: '(tabs)',
 };
 
 // Prevent the splash screen from auto-hiding before getting the color scheme.
@@ -43,37 +44,33 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    const theme = getItem("theme");
+    const theme = getItem('theme');
     if (!theme) {
-      setItem("theme", colorScheme);
+      setItem('theme', colorScheme);
       return;
     }
-    const colorTheme =
-      theme === "light" || theme === "dark" ? theme : colorScheme;
+    const colorTheme = theme === 'light' || theme === 'dark' ? theme : colorScheme;
     setColorScheme(colorTheme);
     setAndroidNavigationBar(colorTheme);
   }, []);
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+    if (loaded || error) {
+      setTimeout(() => SplashScreen.hideAsync(), 50);
     }
-  }, [loaded]);
+  }, [loaded, error]);
+  if (!loaded && !error) return null;
 
   return (
     <DatabaseProvider>
       <ThemeProvider value={NAV_THEME[colorScheme]}>
-        <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
         <GestureHandlerRootView
           style={{ flex: 1 }}
-          className={colorScheme === "dark" ? "dark" : ""}
-        >
+          className={colorScheme === 'dark' ? 'dark' : ''}>
           <BottomSheetModalProvider>
             <Stack>
-              <Stack.Screen
-                name="(tabs)"
-                options={{ title: "Alarms", headerShown: false }}
-              />
+              <Stack.Screen name="(tabs)" options={{ title: 'Alarms', headerShown: false }} />
             </Stack>
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
