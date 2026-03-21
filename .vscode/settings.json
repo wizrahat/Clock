@@ -10,16 +10,36 @@
   "editor.formatOnSave": true,
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsdk": "node_modules/typescript/lib",
+
   "[typescriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "biomejs.birome"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "biomejs.biome"
   },
   "[javascript]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
+
   "files.associations": {
     "*.css": "tailwindcss"
-  }
+  },
+
+  "typescript.preferences.importModuleSpecifier": "shortest",
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.includePackageJsonAutoImports": "on",
+  "typescript.suggest.includeAutomaticOptionalChainCompletions": true,
+
+  "emmet.includeLanguages": {
+    "typescriptreact": "html"
+  },
+  "typescript.suggest.paths": true,
+
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/.expo": true
+  },
+
+  "expo-tools.defaultTerminal": "integrated"
 }

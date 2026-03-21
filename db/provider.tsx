@@ -46,8 +46,8 @@ export function DatabaseProvider({ children }: PropsWithChildren) {
             label: "Alarm",
             time: 540, // 09:00
             isActive: false,
-            scheduleType: "once",
-            repeatDays: [],
+            scheduleType: "repeat",
+            repeatDays: [0],
             specificDates: [],
           },
         ]);

@@ -2,6 +2,7 @@ import { db } from '@/db/drizzle';
 import { Alarm, AlarmsTable, AlarmUpdateSchema, type UpdateAlarm } from './../db/schema/alarms';
 import { eq } from 'drizzle-orm';
 import { SCHEDULE_LABELS } from './constants';
+import { addDays } from 'date-fns';
 
 const PRESET_LABELS: Record<string, string> = {
   [JSON.stringify([0, 1, 2, 3, 4, 5, 6])]: SCHEDULE_LABELS.EVERY_DAY,
@@ -17,6 +18,11 @@ const DAY_LABELS: Record<number, string> = {
   5: 'Fr',
   6: 'Sa',
 };
+
+function isTomorrow(dayIndex:number){
+  const tomorrow = addDays(new Date(),1)
+  return dayIndex === tomorrow.getDay()
+}
 
 function isConsecutive(arr: number[]) {
   return arr.every((v, i) => i === arr.length - 1 || v + 1 === arr[i + 1]);
@@ -41,6 +47,9 @@ export function formatScheduleLabel(scheduleType: Alarm['scheduleType'], repeatD
   const presetLabel = PRESET_LABELS[JSON.stringify(repeatDays)];
   if (presetLabel) {
     return presetLabel;
+  }
+  if(repeatDays.length === 1 && isTomorrow(repeatDays[0]) ){
+    return SCHEDULE_LABELS.TOMORROW
   }
   if (repeatDays.length === 1) {
     return DAY_LABELS[repeatDays[0]];

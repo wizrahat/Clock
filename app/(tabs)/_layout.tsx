@@ -69,14 +69,14 @@ export default function TabLayout() {
           title: '',
           tabBarIcon: ({ color }) => <PenBox size={24} color={color} />,
         }}
-      />{' '}
+      />
       <Tabs.Screen
         name="test copy 2"
         options={{
           title: '',
           tabBarIcon: ({ color }) => <PenBox size={24} color={color} />,
         }}
-      />{' '}
+      />
       <Tabs.Screen
         name="test copy 3"
         options={{

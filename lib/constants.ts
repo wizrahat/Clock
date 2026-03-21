@@ -3,4 +3,5 @@ export const SCHEDULE_LABELS = {
   WEEKDAYS: 'Weekdays',
   WEEKENDS: 'Weekends',
   ONCE: 'Once',
+  TOMORROW: 'tomorrow',
 } as const;
