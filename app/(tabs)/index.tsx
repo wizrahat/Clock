@@ -55,7 +55,7 @@ export default function Alarms({ }: Props) {
       {/* <View className="w-[90%] mx-auto h-[1px] bg-muted" /> */}
 
       <View className="w-full flex-row items-center justify-between px-3.5">
-        <Text className="pl-2.5 text-2xl" font="Poppins_500Medium">
+        <Text className="pl-2.5 text-2xl" font="Poppins_600SemiBold">
           Alarms
         </Text>
         <View className="flex-row items-center justify-end gap-2.5">
