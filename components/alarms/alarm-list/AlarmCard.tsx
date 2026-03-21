@@ -21,7 +21,7 @@ export default function AlarmCard({ alarm }: { alarm: Alarm }) {
       }}>
       <CardContent className="flex-row items-center justify-between px-3.5">
         <View className="flex items-start justify-center gap-1">
-          <Text className="mb-1.5 text-sm text-muted-foreground">{label}</Text>
+          <Text className="mb-2 text-sm text-muted-foreground">{label}</Text>
           <Text className="text-3xl text-foreground" font="Poppins_500Medium">
             {formatTime(time)}
           </Text>

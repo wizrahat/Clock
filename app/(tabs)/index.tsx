@@ -39,11 +39,13 @@ export default function Alarms({ }: Props) {
       <View className="items-center justify-center py-8">
         {nextAlarm ? (
           <>
-            <Text className="text-base text-muted-foreground">Next alarm in</Text>
-            <Text className="text-5xl leading-snug text-foreground -my-1" font="Poppins_600SemiBold">
+            <Text className="text-base tracking-widest text-muted-foreground">NEXT ALARM IN</Text>
+            <Text
+              className="-my-1 text-6xl leading-snug tracking-widest text-foreground"
+              font="Poppins_700Bold">
               {timeTillNextAlarm}
             </Text>
-            <Text className="text-xl text-primary" font="Poppins_500Medium">
+            <Text className="text-xl text-muted-foreground">
               {formatTime(nextAlarm.time)} · {nextAlarm.label}
             </Text>
             {/* add some subtle teal hint */}
