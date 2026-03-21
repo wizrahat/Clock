@@ -9,9 +9,10 @@ import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/button';
-import { formatTime, getTimeTillNext } from '@/lib/utils';
+import { formatTime } from '@/lib/utils';
 import { useDatabase } from '@/db/provider';
 import { useLiveQuery } from 'drizzle-orm/expo-sqlite';
+import { getTimeTillNext } from '@/lib/alarms';
 
 type Props = {};
 export default function Alarms({ }: Props) {

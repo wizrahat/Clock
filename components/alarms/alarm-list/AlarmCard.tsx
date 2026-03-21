@@ -26,7 +26,7 @@ export default function AlarmCard({ alarm }: { alarm: Alarm }) {
             {formatTime(time)}
           </Text>
           <Text className="text-sm text-muted-foreground">
-            {formatScheduleLabel(scheduleType, repeatDays as number[])}
+            {formatScheduleLabel(scheduleType, repeatDays as number[], specificDates as string[])}
           </Text>
         </View>
         <Switch

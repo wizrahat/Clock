@@ -16,12 +16,3 @@ export function formatTime(totalMinutes: number, type?: 'display') {
   }
 }
 
-export function getTimeTillNext(timeInMinutes: number, currentTime?: Date) {
-  const now = currentTime || new Date();
-  const currentMinutes = now.getHours() * 60 + now.getMinutes();
-  let difference = timeInMinutes - currentMinutes;
-  if (difference < 0) {
-    difference += 1440;
-  }
-  return formatTime(difference, 'display');
-}
