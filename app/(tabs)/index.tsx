@@ -12,18 +12,33 @@ import { Button } from '@/components/ui/button';
 import { formatTime } from '@/lib/utils';
 import { useDatabase } from '@/db/provider';
 import { useLiveQuery } from 'drizzle-orm/expo-sqlite';
-import { getTimeTillNext } from '@/lib/alarms';
+import { formatCountdown, getNextOccurrence, updateAlarm } from '@/lib/alarms';
 
 type Props = {};
-export default function Alarms({ }: Props) {
+export default function Alarms({}: Props) {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   const { data: alarms } = useLiveQuery(db.select().from(AlarmsTable));
   const { colors } = useColorScheme();
   const { db: database } = useDatabase();
 
-  const nextAlarm = alarms.filter((alarm) => alarm.isActive).sort((a, b) => a.time - b.time)[0];
-  const timeTillNextAlarm = nextAlarm ? getTimeTillNext(nextAlarm.time, currentTime) : null;
+  const alarmsWithNext = alarms
+    .filter((alarm) => alarm.isActive)
+    .map((alarm) => ({ alarm, next: getNextOccurrence(alarm) }));
+
+  const nextAlarmWithNext = alarmsWithNext
+    .filter(({ next }) => next !== null)
+    .sort((a, b) => a.next!.getTime() - b.next!.getTime())[0];
+
+  const nextAlarm = nextAlarmWithNext?.alarm ?? null;
+  const nextOccurrence = nextAlarmWithNext?.next ?? null;
+  const timeTillNextAlarm = nextOccurrence ? formatCountdown(nextOccurrence, currentTime) : null;
+
+  useEffect(() => {
+    alarmsWithNext
+      .filter(({ next }) => next === null)
+      .forEach(({ alarm }) => updateAlarm(alarm.id, { isActive: false }));
+  }, [alarms]);
 
   useEffect(() => {
     const interval = setInterval(() => {
