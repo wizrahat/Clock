@@ -19,7 +19,7 @@ import { ThemeProvider } from '@react-navigation/native';
 import { NAV_THEME } from '@/lib/theme';
 import { getItem, setItem } from '@/lib/storage';
 import { PortalHost } from '@rn-primitives/portal';
-import { View } from 'react-native';
+
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -34,7 +34,7 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const { colorScheme, setColorScheme, toggleColorScheme } = useColorScheme();
+  const { colorScheme, setColorScheme } = useColorScheme();
 
   const [loaded, error] = useFonts({
     Poppins_400Regular,

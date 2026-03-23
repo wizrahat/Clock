@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 import { AlarmClock } from '@/components/common/Icons';
 import { useColorScheme } from '@/lib/useColorScheme';
-import { PenBox } from 'lucide-react-native';
+import { Globe, Hourglass, Timer } from 'lucide-react-native';
 import { Platform, StyleSheet, View } from 'react-native';
 import { BlurView } from 'expo-blur';
 
@@ -60,28 +60,21 @@ export default function TabLayout() {
         name="test"
         options={{
           title: '',
-          tabBarIcon: ({ color }) => <PenBox size={24} color={color} />,
+          tabBarIcon: ({ color }) => <Globe size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="test copy"
         options={{
           title: '',
-          tabBarIcon: ({ color }) => <PenBox size={24} color={color} />,
+          tabBarIcon: ({ color }) => <Hourglass size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="test copy 2"
         options={{
           title: '',
-          tabBarIcon: ({ color }) => <PenBox size={24} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="test copy 3"
-        options={{
-          title: '',
-          tabBarIcon: ({ color }) => <PenBox size={24} color={color} />,
+          tabBarIcon: ({ color }) => <Timer size={24} color={color} />,
         }}
       />
     </Tabs>

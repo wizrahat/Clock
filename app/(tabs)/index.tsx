@@ -5,7 +5,7 @@ import { db } from '@/db/drizzle';
 import { AlarmsTable } from '@/db/schema';
 import { useColorScheme } from '@/lib/useColorScheme';
 import { EllipsisVertical, Plus } from 'lucide-react-native';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/button';
@@ -13,9 +13,12 @@ import { formatTime } from '@/lib/utils';
 import { useDatabase } from '@/db/provider';
 import { useLiveQuery } from 'drizzle-orm/expo-sqlite';
 import { formatCountdown, getNextOccurrence, updateAlarm } from '@/lib/alarms';
+import { router } from 'expo-router';
+import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 
 type Props = {};
 export default function Alarms({}: Props) {
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
 
   const { data: alarms } = useLiveQuery(db.select().from(AlarmsTable));
@@ -77,7 +80,10 @@ export default function Alarms({}: Props) {
           Alarms
         </Text>
         <View className="flex-row items-center justify-end gap-2.5">
-          <Button variant="ghost" className="h-8 w-8 bg-card shadow-sm shadow-black/5">
+          <Button
+            onPress={() => bottomSheetRef.current?.present()}
+            variant="ghost"
+            className="h-8 w-8 bg-card shadow-sm shadow-black/5">
             <Plus color={colors.foreground} size={20} />
           </Button>
           <Button variant="ghost" className="h-8 w-8 bg-card shadow-sm shadow-black/5">
@@ -92,6 +98,12 @@ export default function Alarms({}: Props) {
           <AlarmCard key={alarm.id} alarm={alarm} />
         ))}
         {/* add some subtle teal hint */}
+
+        <BottomSheetModal ref={bottomSheetRef} snapPoints={['50%', '90%']} enablePanDownToClose>
+          <BottomSheetView style={{ flex: 1, padding: 20 }}>
+            <Text>Test Bottom Sheet</Text>
+          </BottomSheetView>
+        </BottomSheetModal>
       </ScrollView>
     </SafeAreaView>
   );
