@@ -26,8 +26,7 @@ export default function TabLayout() {
               flex: 1,
               overflow: 'hidden',
               boxShadow: `inset 0 0px 0px, 0 3px ${isDarkColorScheme ? '6px' : '5px'} ${colors.foreground}`, // temporary until we have a full color system
-            }}
-            className="rounded-md">
+            }}>
             <BlurView
               intensity={40}
               tint="light"
@@ -41,7 +40,7 @@ export default function TabLayout() {
                   backgroundColor: isDarkColorScheme
                     ? 'rgba(0,0,0,0.5)' // temporary until we have a full color system but will try to keep it just like this
                     : Platform.OS === 'ios'
-                      ? 'rgba(255,255,255,0.7)'
+                      ? 'rgba(255,255,255,0.5)'
                       : 'rgba(255,255,255,0.3)', // temporary until we have a full color system, a proper screen and filled icons to test the contrast on so we can adjust the white value to see how less whte we can keep
                 },
               ]}
