@@ -12,7 +12,7 @@ export const AlarmsTable = sqliteTable('alarms', {
   isActive: integer({
     mode: 'boolean',
   })
-    .default(false)
+    .default(true)
     .notNull(),
   createdAt: integer({ mode: 'timestamp' })
     .$defaultFn(() => new Date())
