@@ -4,7 +4,7 @@ import { ThemeToggle } from '@/components/common/ThemeToggle';
 import { db } from '@/db/drizzle';
 import { AlarmsTable } from '@/db/schema';
 import { useColorScheme } from '@/lib/useColorScheme';
-import { EllipsisVertical, Plus } from 'lucide-react-native';
+import { AlarmClock, EllipsisVertical, Plus } from 'lucide-react-native';
 import { useEffect, useRef, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -36,6 +36,7 @@ export default function Alarms({}: Props) {
   const nextAlarm = nextAlarmWithNext?.alarm ?? null;
   const nextOccurrence = nextAlarmWithNext?.next ?? null;
   const timeTillNextAlarm = nextOccurrence ? formatCountdown(nextOccurrence, currentTime) : null;
+  const isTimeBased = timeTillNextAlarm?.includes('m') || timeTillNextAlarm?.includes('h');
 
   useEffect(() => {
     alarmsWithNext
@@ -55,12 +56,14 @@ export default function Alarms({}: Props) {
   return (
     <SafeAreaView className="flex-1 bg-background">
       <ThemeToggle />
-      <View className="items-center justify-center py-8">
+      <View className="items-center justify-center py-8" style={{ height: 195 }}>
         {nextAlarm ? (
           <>
-            <Text className="text-base tracking-widest text-muted-foreground">NEXT ALARM IN</Text>
+            <Text className="text-base tracking-widest text-muted-foreground">
+              NEXT ALARM {isTimeBased && 'IN'}
+            </Text>
             <Text
-              className="-my-1 text-6xl leading-snug tracking-widest text-foreground"
+              className={`-my-1 ${isTimeBased ? 'text-6xl' : 'text-5xl'} leading-snug tracking-widest text-foreground`}
               font="Poppins_700Bold">
               {timeTillNextAlarm}
             </Text>
@@ -70,7 +73,7 @@ export default function Alarms({}: Props) {
             {/* add some subtle teal hint */}
           </>
         ) : (
-          <Text>No active alarms</Text>
+          <Text className="text-xl text-muted-foreground">No active alarms</Text>
         )}
       </View>
       {/* <View className="w-[90%] mx-auto h-[1px] bg-muted" /> */}
@@ -98,13 +101,12 @@ export default function Alarms({}: Props) {
           <AlarmCard key={alarm.id} alarm={alarm} />
         ))}
         {/* add some subtle teal hint */}
-
-        <BottomSheetModal ref={bottomSheetRef} snapPoints={['50%', '90%']} enablePanDownToClose>
-          <BottomSheetView style={{ flex: 1, padding: 20 }}>
-            <Text>Test Bottom Sheet</Text>
-          </BottomSheetView>
-        </BottomSheetModal>
       </ScrollView>
+      <BottomSheetModal ref={bottomSheetRef} snapPoints={['50%', '90%']} enablePanDownToClose>
+        <BottomSheetView style={{ flex: 1, padding: 20 }}>
+          <Text>Test Bottom Sheet</Text>
+        </BottomSheetView>
+      </BottomSheetModal>
     </SafeAreaView>
   );
 }
