@@ -1,6 +1,6 @@
+import { Switch } from '@/components/common/Switch';
 import { Text } from '@/components/common/Text';
 import { Card, CardContent } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
 import { Alarm } from '@/db/schema';
 import { formatScheduleLabel, updateAlarm } from '@/lib/alarms';
 import { formatTime } from '@/lib/utils';

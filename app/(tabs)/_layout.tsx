@@ -1,7 +1,6 @@
 import { Tabs } from 'expo-router';
-import { AlarmClock } from '@/components/common/Icons';
-import { useColorScheme } from '@/lib/useColorScheme';
-import { Globe, Hourglass, Timer } from 'lucide-react-native';
+import { AlarmClock ,Globe, Hourglass, Timer} from 'lucide-react-native';
+import { useColorScheme,  } from '@/lib/useColorScheme';
 import { Platform, StyleSheet, View } from 'react-native';
 import { BlurView } from 'expo-blur';
 

@@ -18,7 +18,10 @@ import {
   BottomSheetModal,
   BottomSheetView,
   useBottomSheetSpringConfigs,
+  useBottomSheetTimingConfigs,
 } from '@gorhom/bottom-sheet';
+import { SCHEDULE_LABELS } from '@/lib/constants';
+import { Easing } from 'react-native-reanimated';
 
 type Props = {};
 export default function Alarms({}: Props) {
@@ -29,10 +32,9 @@ export default function Alarms({}: Props) {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { colors } = useColorScheme();
 
-  const animationConfigs = useBottomSheetSpringConfigs({
-    damping: 15, // change this later if needed
-    stiffness: 200, // change this later if needed
-    mass: 0.4, // change this later if needed
+  const animationConfigs = useBottomSheetTimingConfigs({
+    duration: 350,
+    easing: Easing.bezier(0.2, 0.8, 0.3, 1),
   });
 
   // DATA
@@ -51,7 +53,9 @@ export default function Alarms({}: Props) {
   const nextAlarm = nextAlarmWithNext?.alarm ?? null;
   const nextOccurrence = nextAlarmWithNext?.next ?? null;
   const timeTillNextAlarm = nextOccurrence ? formatCountdown(nextOccurrence, currentTime) : null;
-  const isTimeBased = timeTillNextAlarm?.includes('m') || timeTillNextAlarm?.includes('h');
+  const isTimeBased =
+    (timeTillNextAlarm?.includes('m') || timeTillNextAlarm?.includes('h')) &&
+    timeTillNextAlarm !== SCHEDULE_LABELS.TOMORROW;
 
   // EFFECTS
   useEffect(() => {
@@ -129,11 +133,6 @@ export default function Alarms({}: Props) {
         backgroundStyle={{
           borderRadius: 12,
           backgroundColor: colors.card,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: -4 },
-          shadowOpacity: 0.1,
-          shadowRadius: 8,
-          elevation: 10,
         }}
         ref={bottomSheetRef}
         snapPoints={['93.5%']} // change this later if needed
