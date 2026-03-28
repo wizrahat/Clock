@@ -3,17 +3,14 @@ module.exports = (api) => {
   return {
     presets: [
       [
-        "babel-preset-expo",
+        'babel-preset-expo',
         {
-          jsxImportSource: "nativewind",
+          jsxImportSource: 'nativewind',
           unstable_transformImportMeta: true,
         },
       ],
-      "nativewind/babel",
+      'nativewind/babel',
     ],
-    plugins: [
-      "react-native-reanimated/plugin",
-      ["inline-import", { extensions: [".sql"] }],
-    ],
+    plugins: [['inline-import', { extensions: ['.sql'] }], 'react-native-reanimated/plugin'],
   };
 };

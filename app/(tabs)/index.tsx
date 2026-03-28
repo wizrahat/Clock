@@ -17,11 +17,11 @@ import {
   BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetView,
-  useBottomSheetSpringConfigs,
   useBottomSheetTimingConfigs,
 } from '@gorhom/bottom-sheet';
 import { SCHEDULE_LABELS } from '@/lib/constants';
 import { Easing } from 'react-native-reanimated';
+import { NewAlarmBottomSheet } from '@/components/alarms/new-alarm';
 
 type Props = {};
 export default function Alarms({}: Props) {
@@ -31,10 +31,9 @@ export default function Alarms({}: Props) {
   // HOOKS
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { colors } = useColorScheme();
-
   const animationConfigs = useBottomSheetTimingConfigs({
-    duration: 350,
-    easing: Easing.bezier(0.2, 0.8, 0.3, 1),
+    duration: 350, // change later if needed
+    easing: Easing.bezier(0.2, 0.8, 0.3, 1), // change later if needed
   });
 
   // DATA
@@ -123,39 +122,7 @@ export default function Alarms({}: Props) {
         ))}
         {/* add some subtle teal hint */}
       </ScrollView>
-      <BottomSheetModal
-        handleIndicatorStyle={{
-          backgroundColor: colors.mutedForeground,
-          width: 60, // change this later if needed
-          height: 3, // change this later if needed
-          borderRadius: 10, // change this later if needed
-        }}
-        backgroundStyle={{
-          borderRadius: 12,
-          backgroundColor: colors.card,
-        }}
-        ref={bottomSheetRef}
-        snapPoints={['93.5%']} // change this later if needed
-        enableDynamicSizing={false}
-        enablePanDownToClose
-        overDragResistanceFactor={1}
-        enableOverDrag
-        backdropComponent={(props) => {
-          return (
-            <BottomSheetBackdrop
-              {...props}
-              opacity={0.5}
-              appearsOnIndex={0}
-              disappearsOnIndex={-1}
-              pressBehavior="close"
-            />
-          );
-        }}
-        animationConfigs={animationConfigs}>
-        <BottomSheetView style={{ flex: 1, padding: 20 }}>
-          <Text>Test Bottom Sheet</Text>
-        </BottomSheetView>
-      </BottomSheetModal>
+      <NewAlarmBottomSheet bottomSheetRef={bottomSheetRef} />
     </SafeAreaView>
   );
 }
