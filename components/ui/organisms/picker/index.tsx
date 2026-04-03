@@ -1,5 +1,6 @@
-import React, { memo, useEffect, useRef, useMemo, useCallback } from 'react';
-import { View, Pressable } from 'react-native';
+// components/ui/organisms/picker.tsx
+import React, { memo, useEffect, useRef, useCallback } from 'react';
+import { View, StyleSheet, ViewStyle } from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -8,188 +9,176 @@ import Animated, {
   Extrapolation,
   runOnJS,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import { FlashList } from '@shopify/flash-list';
 import { Audio } from 'expo-av';
+import { LinearGradient } from 'expo-linear-gradient';
+import MaskedView from '@react-native-masked-view/masked-view';
 
-const LOOP_ITERATIONS = 100;
+const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
 
-export const Picker = memo(
-  ({
-    items,
-    onItemChange,
-    initialIndex = 0,
-    itemHeight = 64,
-    rowGap = 0,
-    fontSize = 32,
-    width = 85,
-    loop = true,
-    textColor = '#FFFFFF',
-    font = 'Poppins_500Medium',
-    fontWeight = '700',
-    deceleration = 0.998,
-  }: any) => {
-    const count = items.length;
-    const effectiveItemHeight = itemHeight + rowGap;
-    const pickerHeight = effectiveItemHeight * 5;
-    const scrollY = useSharedValue(0);
-    const flatListRef = useRef<Animated.FlatList<string>>(null);
-    const lastIndex = useRef(initialIndex);
-    const soundRef = useRef<Audio.Sound | null>(null);
+export const Picker = memo(({
+  items,
+  onItemChange,
+  initialIndex = 0,
+  itemHeight = 64,
+  rowGap = 0,
+  fontSize = 32,
+  width = 85,
+  textColor = '#FFFFFF',
+  font = 'Poppins_500Medium',
+  fontWeight = '700',
+  deceleration = 0.998,
+}: any) => {
+  const effectiveItemHeight = itemHeight + rowGap;
+  const totalHeight = effectiveItemHeight * 5;
+  const scrollY = useSharedValue(initialIndex * effectiveItemHeight);
+  const lastIndex = useSharedValue(initialIndex);
+  const soundRef = useRef<Audio.Sound | null>(null);
 
-    useEffect(() => {
-      async function setupAudio() {
-        try {
-          await Audio.setAudioModeAsync({
-            playsInSilentModeIOS: true,
-            shouldDuckAndroid: true,
-          });
-          const { sound } = await Audio.Sound.createAsync(require('@/assets/sounds/tick.wav'));
-          soundRef.current = sound;
-        } catch (e) {
-          console.warn('Sound load failed.');
-        }
-      }
-      setupAudio();
-      return () => {
-        soundRef.current?.unloadAsync();
-      };
-    }, []);
-
-    const playFeedback = useCallback(async () => {
-      if (!soundRef.current) return;
+  useEffect(() => {
+    async function setup() {
       try {
-        await soundRef.current.replayAsync();
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        const { sound } = await Audio.Sound.createAsync(
+          require('@/assets/sounds/tick.wav'),
+          { shouldPlay: false, volume: 1.0 }
+        );
+        soundRef.current = sound;
       } catch (e) {}
-    }, []);
+    }
+    setup();
+    return () => { soundRef.current?.unloadAsync(); };
+  }, []);
 
-    const data = useMemo(() => {
-      return loop
-        ? Array.from({ length: count * LOOP_ITERATIONS }, (_, i) => items[i % count])
-        : items;
-    }, [items, loop, count]);
+  const playSound = useCallback(() => {
+    if (!soundRef.current) return;
+    soundRef.current.setPositionAsync(0).then(() => {
+      soundRef.current?.playAsync().catch(() => {});
+    }).catch(() => {});
+  }, []);
 
-    const midPoint = loop ? count * (LOOP_ITERATIONS / 2) : 0;
-
-    useEffect(() => {
-      const offset = (midPoint + initialIndex) * effectiveItemHeight;
-      scrollY.value = offset;
-      flatListRef.current?.scrollToOffset({ offset, animated: false });
-    }, [initialIndex]);
-
-    const handleIndexChange = (offset: number) => {
-      const index = Math.round(offset / effectiveItemHeight);
-      const normalizedIndex = loop ? index % count : index;
-
-      if (
-        normalizedIndex !== lastIndex.current &&
-        normalizedIndex >= 0 &&
-        normalizedIndex < count
-      ) {
-        lastIndex.current = normalizedIndex;
-        runOnJS(playFeedback)();
-        if (onItemChange) runOnJS(onItemChange)(items[normalizedIndex]);
-      }
-    };
-
-    const onScroll = useAnimatedScrollHandler({
-      onScroll: (event) => {
-        scrollY.value = event.contentOffset.y;
-        runOnJS(handleIndexChange)(event.contentOffset.y);
-      },
-      onMomentumEnd: (event) => {
-        if (!loop) return;
-        const totalHeight = count * LOOP_ITERATIONS * effectiveItemHeight;
-        if (event.contentOffset.y < totalHeight / 4 || event.contentOffset.y > totalHeight * 0.75) {
-          const mid = count * (LOOP_ITERATIONS / 2);
-          const offset =
-            (mid + (Math.round(event.contentOffset.y / effectiveItemHeight) % count)) *
-            effectiveItemHeight;
-          flatListRef.current?.scrollToOffset({ offset, animated: false });
-        }
-      },
-    });
-
-    return (
-      <View style={{ width, height: pickerHeight }}>
-        <Animated.FlatList
-          ref={flatListRef}
-          data={data}
-          renderItem={({ item, index }) => (
-            <PickerItem
-              item={item}
-              index={index}
-              scrollY={scrollY}
-              itemHeight={effectiveItemHeight}
-              width={width}
-              fontSize={fontSize}
-              textColor={textColor}
-              font={font}
-              fontWeight={fontWeight}
-              onPress={() =>
-                flatListRef.current?.scrollToOffset({
-                  offset: index * effectiveItemHeight,
-                  animated: true,
-                })
-              }
-            />
-          )}
-          onScroll={onScroll}
-          scrollEventThrottle={16}
-          snapToInterval={effectiveItemHeight}
-          snapToAlignment="center"
-          decelerationRate={deceleration}
-          disableIntervalMomentum={false}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingVertical: effectiveItemHeight * 2 }}
-          getItemLayout={(_, index) => ({
-            length: effectiveItemHeight,
-            offset: effectiveItemHeight * index,
-            index,
-          })}
-          windowSize={11}
-        />
-      </View>
-    );
-  }
-);
-
-const PickerItem = memo(
-  ({
-    item,
-    index,
-    scrollY,
-    itemHeight,
-    width,
-    fontSize,
-    textColor,
-    font,
-    fontWeight,
-    onPress,
-  }: any) => {
-    const animatedStyle = useAnimatedStyle(() => {
-      const distance = Math.abs(scrollY.value - index * itemHeight);
-      const opacity = interpolate(
-        distance,
-        [0, itemHeight * 0.9, itemHeight * 2],
-        [1, 0.35, 0.1],
-        Extrapolation.CLAMP
+  const onScroll = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollY.value = event.contentOffset.y;
+      const currentIndex = Math.round(
+        event.contentOffset.y / effectiveItemHeight
       );
-      return { opacity };
-    });
+      if (
+        currentIndex !== lastIndex.value &&
+        currentIndex >= 0 &&
+        currentIndex < items.length
+      ) {
+        lastIndex.value = currentIndex;
+        runOnJS(playSound)();
+        if (onItemChange) runOnJS(onItemChange)(items[currentIndex]);
+      }
+    },
+  });
 
-    return (
-      <Pressable onPress={onPress}>
-        <View style={{ height: itemHeight, width, justifyContent: 'center', alignItems: 'center' }}>
-          <Animated.Text
-            style={[
-              { color: textColor, fontSize, fontWeight, fontFamily: font, letterSpacing: -0.5 },
-              animatedStyle,
-            ]}>
-            {item}
-          </Animated.Text>
-        </View>
-      </Pressable>
-    );
-  }
-);
+  return (
+    <MaskedView
+      style={{ width, height: totalHeight }}
+      maskElement={
+        // white = fully visible, transparent = fully hidden
+        // center strip is white so text shows, edges fade to transparent
+        <LinearGradient
+          colors={[
+            'transparent',
+            'rgba(255,255,255,0.1)',
+            'rgba(255,255,255,0.6)',
+            'white',
+            'white',
+            'rgba(255,255,255,0.6)',
+            'rgba(255,255,255,0.1)',
+            'transparent',
+          ]}
+          locations={[0, 0.1, 0.2, 0.35, 0.65, 0.8, 0.9, 1]}
+          style={{ flex: 1 }}
+        />
+      }
+    >
+      <AnimatedFlashList
+        data={items}
+        keyExtractor={(_, index) => index.toString()}
+        estimatedItemSize={effectiveItemHeight}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+        snapToInterval={effectiveItemHeight}
+        snapToAlignment="center"
+        decelerationRate={deceleration}
+        showsVerticalScrollIndicator={false}
+        style={{ backgroundColor: 'transparent' }}
+        contentContainerStyle={{ paddingVertical: effectiveItemHeight * 2 }}
+        drawDistance={effectiveItemHeight * 6}
+        initialScrollIndex={initialIndex}
+        renderItem={({ item, index }) => (
+          <PickerItem
+            item={item}
+            index={index}
+            scrollY={scrollY}
+            itemHeight={effectiveItemHeight}
+            fontSize={fontSize}
+            textColor={textColor}
+            font={font}
+            fontWeight={fontWeight}
+          />
+        )}
+      />
+    </MaskedView>
+  );
+});
+
+const PickerItem = memo(({
+  item,
+  index,
+  scrollY,
+  itemHeight,
+  fontSize,
+  textColor,
+  font,
+  fontWeight,
+}: any) => {
+  const animatedStyle = useAnimatedStyle(() => {
+    const centerOffset = scrollY.value / itemHeight;
+    const distance = Math.abs(index - centerOffset);
+
+    return {
+      transform: [
+        {
+          scale: interpolate(
+            distance,
+            [0, 1, 2],
+            [1, 0.88, 0.75],
+            Extrapolation.CLAMP
+          ),
+        },
+      ],
+    };
+  });
+
+  return (
+    <Animated.View style={[styles.itemContainer, { height: itemHeight }, animatedStyle]}>
+      <Animated.Text
+        allowFontScaling={false}
+        style={{
+          color: textColor,
+          fontSize,
+          fontFamily: font,
+          fontWeight,
+          lineHeight: itemHeight,
+          textAlign: 'center',
+        }}
+      >
+        {item}
+      </Animated.Text>
+    </Animated.View>
+  );
+});
+
+const styles = StyleSheet.create({
+  itemContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    backgroundColor: 'transparent',
+  } as ViewStyle,
+});

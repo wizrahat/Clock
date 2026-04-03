@@ -4,6 +4,8 @@ import { Picker } from '@/components/ui/organisms/picker';
 import { useColorScheme } from '@/lib/useColorScheme';
 
 const ITEM_HEIGHT = 64;
+const ROW_GAP = -5;
+const TOTAL_ITEM_HEIGHT = ITEM_HEIGHT + ROW_GAP;
 
 export default function TimePicker() {
   const [hour, setHour] = useState('05');
@@ -11,55 +13,25 @@ export default function TimePicker() {
   const [period, setPeriod] = useState('AM');
   const { colors } = useColorScheme();
 
-  const ROW_GAP = -5;
-  const TOTAL_ITEM_HEIGHT = ITEM_HEIGHT + ROW_GAP;
-
-  const dynamicStyles = StyleSheet.create({
-    screen: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: colors.card,
-    },
-    card: {
-      flexDirection: 'row',
-      borderRadius: 32,
-      overflow: 'hidden',
-      position: 'relative',
-      backgroundColor: colors.card,
-      paddingHorizontal: 16,
-    },
-    pickerRow: {
-      flexDirection: 'row',
-      zIndex: 2,
-      alignItems: 'center',
-    },
-    selectionOverlay: {
-      position: 'absolute',
-      left: 10,
-      right: 10,
-      borderRadius: 8,
-      zIndex: 1,
-      backgroundColor: colors.muted,
-      opacity: 0.5,
-    },
-  });
-
   return (
-    <View style={dynamicStyles.screen}>
-      <View style={[dynamicStyles.card, { height: TOTAL_ITEM_HEIGHT * 5 }]}>
+    <View style={[styles.screen, { backgroundColor: colors.card }]}>
+      <View style={[styles.card, {
+        height: TOTAL_ITEM_HEIGHT * 5,
+        backgroundColor: colors.card,
+      }]}>
         <View
           style={[
-            dynamicStyles.selectionOverlay,
+            styles.selectionOverlay,
             {
               height: TOTAL_ITEM_HEIGHT - 4,
               top: TOTAL_ITEM_HEIGHT * 2 + 2,
+              backgroundColor: colors.muted,
             },
           ]}
           pointerEvents="none"
         />
 
-        <View style={[dynamicStyles.pickerRow, { gap: 40 }]}>
+        <View style={styles.pickerRow}>
           <Picker
             items={['AM', 'PM']}
             width={60}
@@ -67,13 +39,14 @@ export default function TimePicker() {
             rowGap={ROW_GAP}
             fontSize={24}
             onItemChange={setPeriod}
-            loop={false}
             textColor={colors.foreground}
             font="Poppins_500Medium"
             deceleration={0.994}
           />
           <Picker
-            items={Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'))}
+            items={Array.from({ length: 12 }, (_, i) =>
+              String(i + 1).padStart(2, '0')
+            )}
             width={70}
             itemHeight={ITEM_HEIGHT}
             rowGap={ROW_GAP}
@@ -85,7 +58,9 @@ export default function TimePicker() {
             deceleration={0.994}
           />
           <Picker
-            items={Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'))}
+            items={Array.from({ length: 60 }, (_, i) =>
+              String(i).padStart(2, '0')
+            )}
             width={70}
             itemHeight={ITEM_HEIGHT}
             rowGap={ROW_GAP}
@@ -101,3 +76,33 @@ export default function TimePicker() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  card: {
+    flexDirection: 'row',
+    borderRadius: 32,
+    position: 'relative',
+    paddingHorizontal: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pickerRow: {
+    flexDirection: 'row',
+    zIndex: 2,
+    alignItems: 'center',
+    gap: 40,
+  },
+  selectionOverlay: {
+    position: 'absolute',
+    left: 10,
+    right: 10,
+    borderRadius: 8,
+    zIndex: 1,
+    opacity: 0.5,
+  },
+});
