@@ -4,7 +4,7 @@ import { Picker } from '@/components/ui/organisms/picker';
 import { useColorScheme } from '@/lib/useColorScheme';
 
 const ITEM_HEIGHT = 64;
-const ROW_GAP = -5;
+const ROW_GAP = -8;
 const TOTAL_ITEM_HEIGHT = ITEM_HEIGHT + ROW_GAP;
 
 export default function TimePicker() {
@@ -15,10 +15,14 @@ export default function TimePicker() {
 
   return (
     <View style={[styles.screen, { backgroundColor: colors.card }]}>
-      <View style={[styles.card, {
-        height: TOTAL_ITEM_HEIGHT * 5,
-        backgroundColor: colors.card,
-      }]}>
+      <View
+        style={[
+          styles.card,
+          {
+            height: TOTAL_ITEM_HEIGHT * 5,
+            backgroundColor: colors.card,
+          },
+        ]}>
         <View
           style={[
             styles.selectionOverlay,
@@ -37,39 +41,35 @@ export default function TimePicker() {
             width={60}
             itemHeight={ITEM_HEIGHT}
             rowGap={ROW_GAP}
-            fontSize={24}
+            fontSize={30}
             onItemChange={setPeriod}
             textColor={colors.foreground}
             font="Poppins_500Medium"
-            deceleration={0.994}
+            deceleration={0.993}
           />
           <Picker
-            items={Array.from({ length: 12 }, (_, i) =>
-              String(i + 1).padStart(2, '0')
-            )}
+            items={Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'))}
             width={70}
             itemHeight={ITEM_HEIGHT}
             rowGap={ROW_GAP}
-            fontSize={32}
+            fontSize={34}
             onItemChange={setHour}
             initialIndex={4}
             textColor={colors.foreground}
             font="Poppins_500Medium"
-            deceleration={0.994}
+            deceleration={0.993}
           />
           <Picker
-            items={Array.from({ length: 60 }, (_, i) =>
-              String(i).padStart(2, '0')
-            )}
+            items={Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'))}
             width={70}
             itemHeight={ITEM_HEIGHT}
             rowGap={ROW_GAP}
-            fontSize={32}
+            fontSize={34}
             onItemChange={setMin}
             initialIndex={19}
             textColor={colors.foreground}
             font="Poppins_500Medium"
-            deceleration={0.994}
+            deceleration={0.993}
           />
         </View>
       </View>
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 32,
     position: 'relative',
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     zIndex: 2,
     alignItems: 'center',
-    gap: 40,
+    gap: 45,
   },
   selectionOverlay: {
     position: 'absolute',
