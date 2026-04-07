@@ -1,0 +1,1 @@
+ALTER TABLE `alarms` RENAME COLUMN "specificDates" TO "customDates";

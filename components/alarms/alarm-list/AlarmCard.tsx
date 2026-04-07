@@ -7,7 +7,7 @@ import { formatTime } from '@/lib/utils';
 import { View } from 'react-native';
 
 export default function AlarmCard({ alarm }: { alarm: Alarm }) {
-  const { id, isActive, label, time, scheduleType, specificDates, repeatDays } = alarm;
+  const { id, isActive, label, time, scheduleType, customDates, repeatDays } = alarm;
 
   const handleToggle = async (isActive: boolean) => {
     await updateAlarm(id, { isActive });
@@ -29,7 +29,7 @@ export default function AlarmCard({ alarm }: { alarm: Alarm }) {
             {formatScheduleLabel(
               scheduleType,
               repeatDays as number[],
-              specificDates as string[],
+              customDates as string[],
               time
             )}
           </Text>

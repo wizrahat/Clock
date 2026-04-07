@@ -3,6 +3,7 @@ import { Alarm, AlarmsTable, AlarmUpdateSchema, type UpdateAlarm } from './../db
 import { eq } from 'drizzle-orm';
 import { SCHEDULE_LABELS } from './constants';
 import { addDays, Day, format, getMonth, getYear, nextDay, parseISO } from 'date-fns';
+import { dateToMinutes } from './utils';
 
 const PRESET_LABELS: Record<string, string> = {
   [JSON.stringify([0, 1, 2, 3, 4, 5, 6])]: SCHEDULE_LABELS.EVERY_DAY,
@@ -61,10 +62,10 @@ export async function updateAlarm(id: string, changes: UpdateAlarm) {
 export function formatScheduleLabel(
   scheduleType: Alarm['scheduleType'],
   repeatDays: number[],
-  specificDates: string[],
+  customDates: string[],
   time: number
 ) {
-  const formattedDates = specificDates.map((date) => {
+  const formattedDates = customDates.map((date) => {
     return parseISO(date);
   });
   const presetLabel = PRESET_LABELS[JSON.stringify(repeatDays)];
@@ -72,7 +73,7 @@ export function formatScheduleLabel(
   if (scheduleType === 'once' || (repeatDays.length < 1 && formattedDates.length < 1)) {
     return SCHEDULE_LABELS.ONCE;
   }
-  if (scheduleType === 'specific') {
+  if (scheduleType === 'custom') {
     const startDate = formattedDates[0];
     const endDate = formattedDates[formattedDates.length - 1];
     const currentYear = getYear(new Date());
@@ -83,7 +84,7 @@ export function formatScheduleLabel(
     if (formattedDates.length === 1) {
       if (isDateTomorrow(startDate)) return SCHEDULE_LABELS.TOMORROW;
       if (isDateToday(startDate)) {
-        const currentMinutes = new Date().getHours() * 60 + new Date().getMinutes();
+        const currentMinutes = dateToMinutes(new Date());
         if (currentMinutes < time) return SCHEDULE_LABELS.TODAY;
       }
       return format(startDate, isSameYear ? 'MMM d' : 'MMM d, yyyy');
@@ -111,7 +112,7 @@ export function formatScheduleLabel(
   if (repeatDays.length === 1) {
     if (isDayTomorrow(repeatDays[0])) return SCHEDULE_LABELS.TOMORROW;
     if (repeatDays[0] === new Date().getDay()) {
-      const currentMinutes = new Date().getHours() * 60 + new Date().getMinutes();
+      const currentMinutes = dateToMinutes(new Date());
       if (currentMinutes < time) return SCHEDULE_LABELS.TODAY;
     }
     return format(addDays(new Date(2024, 0, 7), repeatDays[0]), 'EEEE');
@@ -166,7 +167,7 @@ export function getNextOccurrence(alarm: Alarm): Date | null {
   const now = new Date();
   const today = new Date(now);
   today.setHours(0, 0, 0, 0);
-  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  const currentMinutes = dateToMinutes(now);
 
   if (alarm.scheduleType === 'once') {
     const next = combineDateTime(today, alarm.time);
@@ -174,8 +175,8 @@ export function getNextOccurrence(alarm: Alarm): Date | null {
     return combineDateTime(addDays(today, 1), alarm.time);
   }
 
-  if (alarm.scheduleType === 'specific') {
-    const dates = (alarm.specificDates as string[]).map((date) => {
+  if (alarm.scheduleType === 'custom') {
+    const dates = (alarm.customDates as string[]).map((date) => {
       return parseISO(date);
     });
     for (const date of dates) {

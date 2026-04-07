@@ -18,8 +18,8 @@ export const AlarmsTable = sqliteTable('alarms', {
     .$defaultFn(() => new Date())
     .notNull(),
   time: int().notNull(),
-  specificDates: text({ mode: 'json' }).$type<string[]>().default([]).notNull(),
-  scheduleType: text().$type<'once' | 'repeat' | 'specific'>().default('once').notNull(),
+  customDates: text({ mode: 'json' }).$type<string[]>().default([]).notNull(),
+  scheduleType: text().$type<'once' | 'repeat' | 'custom'>().default('once').notNull(),
   repeatDays: text({ mode: 'json' }).$type<number[]>().default([]).notNull(),
 });
 

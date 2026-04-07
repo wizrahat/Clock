@@ -33,7 +33,7 @@ await db.insert(AlarmsTable).values([
     isActive: true,
     scheduleType: "repeat",
     repeatDays: [1, 2, 3, 4, 5],
-    specificDates: [],
+    customDates: [],
   },
   {
     label: "Gym",
@@ -41,7 +41,7 @@ await db.insert(AlarmsTable).values([
     isActive: false,
     scheduleType: "repeat",
     repeatDays: [1, 3, 5],
-    specificDates: [],
+    customDates: [],
   },
   {
     label: "Alarm",
@@ -49,7 +49,7 @@ await db.insert(AlarmsTable).values([
     isActive: false,
     scheduleType: "repeat",
     repeatDays: [0],
-    specificDates: [],
+    customDates: [],
   },
   // Tomorrow repeat
   {
@@ -58,79 +58,79 @@ await db.insert(AlarmsTable).values([
     isActive: true,
     scheduleType: "repeat",
     repeatDays: [new Date(Date.now() + 86400000).getDay()],
-    specificDates: [],
+    customDates: [],
   },
   // Single date - today's year
   {
     label: "Single Date This Year",
     time: 600,
     isActive: true,
-    scheduleType: "specific",
+    scheduleType: "custom",
     repeatDays: [],
-    specificDates: ["2026-06-15"],
+    customDates: ["2026-06-15"],
   },
   // Single date - different year
   {
     label: "Single Date Next Year",
     time: 600,
     isActive: true,
-    scheduleType: "specific",
+    scheduleType: "custom",
     repeatDays: [],
-    specificDates: ["2027-06-15"],
+    customDates: ["2027-06-15"],
   },
   // Tomorrow specific date
   {
     label: "Tomorrow Specific",
     time: 700,
     isActive: true,
-    scheduleType: "specific",
+    scheduleType: "custom",
     repeatDays: [],
-    specificDates: [format(addDays(new Date(), 1), 'yyyy-MM-dd')],
+    customDates: [format(addDays(new Date(), 1), 'yyyy-MM-dd')],
   },
   // Same month range this year
   {
     label: "Same Month Range",
     time: 480,
     isActive: true,
-    scheduleType: "specific",
+    scheduleType: "custom",
     repeatDays: [],
-    specificDates: ["2026-06-01", "2026-06-15"],
+    customDates: ["2026-06-01", "2026-06-15"],
   },
   // Same month range different year
   {
     label: "Same Month Range Next Year",
     time: 480,
     isActive: true,
-    scheduleType: "specific",
+    scheduleType: "custom",
     repeatDays: [],
-    specificDates: ["2027-06-01", "2027-06-15"],
+    customDates: ["2027-06-01", "2027-06-15"],
   },
   // Different month range this year
   {
     label: "Different Month Range",
     time: 480,
     isActive: true,
-    scheduleType: "specific",
+    scheduleType: "custom",
     repeatDays: [],
-    specificDates: ["2026-06-15", "2026-08-20"],
+    customDates: ["2026-06-15", "2026-08-20"],
   },
   // Different month same non-current year
   {
     label: "Different Month Next Year",
     time: 480,
     isActive: true,
-    scheduleType: "specific",
+    scheduleType: "custom",
     repeatDays: [],
-    specificDates: ["2027-03-15", "2027-08-20"],
+    customDates: ["2027-03-15", "2027-08-20"],
   },
   // Spans across years
   {
     label: "Cross Year Range",
     time: 480,
     isActive: true,
-    scheduleType: "specific",
+    scheduleType: "custom",
     repeatDays: [],
-    specificDates: ["2026-12-25", "2027-01-05"],
+    customDates: ["2026-12-25", "2027-01-05"],
   },
 ]);
       }
