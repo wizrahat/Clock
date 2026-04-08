@@ -53,7 +53,7 @@ export default function NewAlarmBottomSheet({ bottomSheetRef }: Props) {
         );
       }}
       animationConfigs={animationConfigs}>
-      <BottomSheetView style={{ flex: 1, padding: 20 }}>
+      <BottomSheetView style={{ flex: 1, padding: 10, gap: 20 }}>
         <TimePicker />
         <ScheduleCard />
       </BottomSheetView>

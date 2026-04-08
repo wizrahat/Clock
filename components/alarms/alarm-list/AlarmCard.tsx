@@ -15,7 +15,7 @@ export default function AlarmCard({ alarm }: { alarm: Alarm }) {
 
   return (
     <Card
-      className="bg-card py-2.5 transition-all"
+      className="rounded-2xl border-[0.5px] border-border bg-card py-2.5 shadow-none transition-all"
       style={{
         opacity: isActive ? 1 : 0.5,
       }}>

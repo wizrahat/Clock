@@ -14,7 +14,7 @@ export default function ScheduleCard() {
   };
 
   return (
-    <View className="rounded-2xl border-[0.5px] border-neutral-200 bg-white p-4">
+    <View className="rounded-2xl border-[0.5px] border-border bg-white p-4">
       <View className="mb-3 flex-row items-center justify-between">
         <Text className="text-[15px] font-medium text-neutral-900">Repeat</Text>
         <View className="flex-row items-center gap-2.5">
