@@ -58,11 +58,20 @@ export const Picker = memo(
       if (!soundRef.current) return;
       soundRef.current
         .setPositionAsync(0)
-        .then(() => {
-          soundRef.current?.playAsync().catch(() => {});
-        })
+        .then(() => soundRef.current?.playAsync().catch(() => {}))
         .catch(() => {});
     }, []);
+
+    const handleScrollSettle = useCallback(
+      (e: any) => {
+        const offsetY = e.nativeEvent.contentOffset.y;
+        const index = Math.round(offsetY / effectiveItemHeight);
+        if (index >= 0 && index < items.length) {
+          onItemChange?.(items[index]);
+        }
+      },
+      [effectiveItemHeight, items, onItemChange]
+    );
 
     const onScroll = useAnimatedScrollHandler({
       onScroll: (event) => {
@@ -97,7 +106,7 @@ export const Picker = memo(
         }>
         <AnimatedFlashList
           data={items}
-          keyExtractor={(_, index) => index.toString()}
+          keyExtractor={(_, index) => index.toString() + items.toString()}
           onScroll={onScroll}
           scrollEventThrottle={16}
           snapToInterval={effectiveItemHeight}
@@ -108,6 +117,8 @@ export const Picker = memo(
           contentContainerStyle={{ paddingVertical: effectiveItemHeight * 2 }}
           drawDistance={effectiveItemHeight * 6}
           initialScrollIndex={initialIndex}
+          onMomentumScrollEnd={handleScrollSettle}
+          onScrollEndDrag={handleScrollSettle}
           renderItem={({ item, index }) => (
             <PickerItem
               item={item}
@@ -130,6 +141,11 @@ const PickerItem = memo(
   ({ item, index, activeIndex, itemHeight, fontSize, textColor, font, fontWeight }: any) => {
     const animatedStyle = useAnimatedStyle(() => {
       const distance = Math.abs(index - activeIndex.value);
+
+      if (distance >= 2) {
+        return { opacity: 0.15 };
+      }
+
       return {
         opacity: interpolate(distance, [0, 0.8, 1.5, 2], [1, 0.7, 0.3, 0.15], Extrapolation.CLAMP),
       };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useMemo, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Picker } from '@/components/ui/organisms/picker';
 import { useColorScheme } from '@/lib/useColorScheme';
@@ -8,11 +8,12 @@ type TimeFormat = '12' | '24';
 const ITEM_HEIGHT = 64;
 const ROW_GAP = -8;
 const TOTAL_ITEM_HEIGHT = ITEM_HEIGHT + ROW_GAP;
-const DEBOUNCE_MS = 300;
 
 const HOURS_12 = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'));
 const HOURS_24 = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'));
 const MINUTES = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'));
+
+const PERIOD = ['AM', 'PM'] as const;
 
 interface TimePickerProps {
   value?: number;
@@ -56,91 +57,111 @@ function timeToMinutes(hour: string, min: string, period: string, timeFormat: Ti
 export default function TimePicker({ value = 300, onChange, timeFormat = '12' }: TimePickerProps) {
   const { hour: initHour, min: initMin, period: initPeriod } = minutesToTime(value, timeFormat);
 
-  const [hour, setHour] = useState(initHour);
-  const [min, setMin] = useState(initMin);
-  const [period, setPeriod] = useState(initPeriod);
+  const hourRef = useRef(initHour);
+  const minRef = useRef(initMin);
+  const periodRef = useRef(initPeriod);
+
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
+
   const { colors } = useColorScheme();
 
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const onChangeRef = useRef(onChange);
-  useEffect(() => {
-    onChangeRef.current = onChange;
-  }, [onChange]);
+  const screenStyle = useMemo(
+    () => [styles.screen, { backgroundColor: colors.card }] as const,
+    [colors.card]
+  );
+  const cardStyle = useMemo(
+    () => [styles.card, { height: TOTAL_ITEM_HEIGHT * 5, backgroundColor: colors.card }] as const,
+    [colors.card]
+  );
+  const overlayStyle = useMemo(
+    () =>
+      [
+        styles.selectionOverlay,
+        {
+          height: TOTAL_ITEM_HEIGHT - 4,
+          top: TOTAL_ITEM_HEIGHT * 2 + 2,
+          backgroundColor: colors.muted,
+        },
+      ] as const,
+    [colors.muted]
+  );
+  const pickerRowStyle = useMemo(
+    () => [styles.pickerRow, { gap: timeFormat === '12' ? 45 : 60 }] as const,
+    [timeFormat]
+  );
 
-  useEffect(() => {
-    if (!onChangeRef.current) return;
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      onChangeRef.current?.(timeToMinutes(hour, min, period, timeFormat));
-    }, DEBOUNCE_MS);
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-    };
-  }, [hour, min, period, timeFormat]);
+  const handleHourChange = useCallback(
+    (newHour: string) => {
+      hourRef.current = newHour;
+      onChangeRef.current?.(timeToMinutes(newHour, minRef.current, periodRef.current, timeFormat));
+    },
+    [timeFormat]
+  );
+
+  const handleMinChange = useCallback(
+    (newMin: string) => {
+      minRef.current = newMin;
+      onChangeRef.current?.(timeToMinutes(hourRef.current, newMin, periodRef.current, timeFormat));
+    },
+    [timeFormat]
+  );
+
+  const handlePeriodChange = useCallback(
+    (newPeriod: string) => {
+      periodRef.current = newPeriod;
+      onChangeRef.current?.(timeToMinutes(hourRef.current, minRef.current, newPeriod, timeFormat));
+    },
+    [timeFormat]
+  );
 
   const hourItems = timeFormat === '12' ? HOURS_12 : HOURS_24;
-  const initHourIndex = hourItems.indexOf(initHour);
-  const initMinIndex = parseInt(initMin, 10);
+  const initHourIndex = useMemo(() => hourItems.indexOf(initHour), [hourItems, initHour]);
+  const initMinIndex = useMemo(() => parseInt(initMin, 10), [initMin]);
+  const initPeriodIndex = useMemo(() => (initPeriod === 'PM' ? 1 : 0), [initPeriod]);
+
+  const sharedPickerProps = useMemo(
+    () => ({
+      itemHeight: ITEM_HEIGHT,
+      rowGap: ROW_GAP,
+      textColor: colors.foreground,
+      font: 'Poppins_600SemiBold' as const,
+      deceleration: 0.993,
+    }),
+    [colors.foreground]
+  );
 
   return (
-    <View style={[styles.screen, { backgroundColor: colors.card }]}>
-      <View style={[styles.card, { height: TOTAL_ITEM_HEIGHT * 5, backgroundColor: colors.card }]}>
-        <View
-          style={[
-            styles.selectionOverlay,
-            {
-              height: TOTAL_ITEM_HEIGHT - 4,
-              top: TOTAL_ITEM_HEIGHT * 2 + 2,
-              backgroundColor: colors.muted,
-            },
-          ]}
-          pointerEvents="none"
-        />
+    <View style={[screenStyle]}>
+      <View style={[cardStyle]}>
+        <View style={[overlayStyle]} pointerEvents="none" />
 
-        <View
-          style={[
-            styles.pickerRow,
-            {
-              gap: timeFormat === '12' ? 45 : 60,
-            },
-          ]}>
+        <View style={[pickerRowStyle]}>
           {timeFormat === '12' && (
             <Picker
-              items={['AM', 'PM']}
+              {...sharedPickerProps}
+              items={PERIOD}
               width={60}
-              itemHeight={ITEM_HEIGHT}
-              rowGap={ROW_GAP}
               fontSize={30}
-              onItemChange={setPeriod}
-              initialIndex={initPeriod === 'PM' ? 1 : 0}
-              textColor={colors.foreground}
-              font="Poppins_600SemiBold"
-              deceleration={0.993}
+              onItemChange={handlePeriodChange}
+              initialIndex={initPeriodIndex}
             />
           )}
           <Picker
+            {...sharedPickerProps}
             items={hourItems}
             width={70}
-            itemHeight={ITEM_HEIGHT}
-            rowGap={ROW_GAP}
             fontSize={34}
-            onItemChange={setHour}
+            onItemChange={handleHourChange}
             initialIndex={initHourIndex}
-            textColor={colors.foreground}
-            font="Poppins_600SemiBold"
-            deceleration={0.993}
           />
           <Picker
+            {...sharedPickerProps}
             items={MINUTES}
             width={70}
-            itemHeight={ITEM_HEIGHT}
-            rowGap={ROW_GAP}
             fontSize={34}
-            onItemChange={setMin}
+            onItemChange={handleMinChange}
             initialIndex={initMinIndex}
-            textColor={colors.foreground}
-            font="Poppins_600SemiBold"
-            deceleration={0.993}
           />
         </View>
       </View>

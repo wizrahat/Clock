@@ -9,6 +9,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import { Easing } from 'react-native-reanimated';
 import TimePicker from './TimePicker';
+import ScheduleCard from './ScheduleCard';
 
 type Props = {
   bottomSheetRef?: React.Ref<BottomSheetModal>;
@@ -54,6 +55,7 @@ export default function NewAlarmBottomSheet({ bottomSheetRef }: Props) {
       animationConfigs={animationConfigs}>
       <BottomSheetView style={{ flex: 1, padding: 20 }}>
         <TimePicker />
+        <ScheduleCard />
       </BottomSheetView>
     </BottomSheetModal>
   );

@@ -1,3 +1,4 @@
 import NewAlarmBottomSheet from './NewAlarmBottomSheet';
 import TimePicker from './TimePicker';
-export { NewAlarmBottomSheet, TimePicker };
+import ScheduleCard from './ScheduleCard';
+export { NewAlarmBottomSheet, TimePicker, ScheduleCard };
