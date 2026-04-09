@@ -1,51 +1,57 @@
-import { View, Text, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
+import { View, Text, Pressable } from 'react-native';
+import { useState, useCallback } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+
+import { useColorScheme } from '@/lib/useColorScheme';
+import ScalePressable from '@/components/common/ScalePressable';
 
 const DAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 export default function ScheduleCard() {
-  const [selectedDays, setSelectedDays] = useState<number[]>([1, 2, 4]);
+  const { colors } = useColorScheme();
+  const [selectedDays, setSelectedDays] = useState<Set<number>>(new Set([]));
 
-  const toggleDay = (index: number) => {
-    setSelectedDays((prev) =>
-      prev.includes(index) ? prev.filter((d) => d !== index) : [...prev, index]
-    );
-  };
+  const toggleDay = useCallback((index: number) => {
+    setSelectedDays((prev) => {
+      const next = new Set(prev);
+      next.has(index) ? next.delete(index) : next.add(index);
+      return next;
+    });
+  }, []);
 
   return (
-    <View className="rounded-2xl border-[0.5px] border-border bg-white p-4">
-      <View className="mb-3 flex-row items-center justify-between">
-        <Text className="text-[15px] font-medium text-neutral-900">Repeat</Text>
-        <View className="flex-row items-center gap-2.5">
-          <TouchableOpacity>
-            <Ionicons name="flash-outline" size={18} color="#888" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Ionicons name="calendar-outline" size={18} color="#888" />
-          </TouchableOpacity>
+    <View className="flex-col gap-3 rounded-2xl border-[0.5px] border-border bg-card p-4">
+      <View className="mb-1.5 flex-row items-center justify-between">
+        <Text className="text-lg font-medium text-foreground">Repeat</Text>
+        <View className="flex-row items-center gap-4">
+          <ScalePressable>
+            <Ionicons name="flash-outline" size={20} color={colors.mutedForeground} />
+          </ScalePressable>
+          <ScalePressable>
+            <Ionicons name="calendar-outline" size={20} color={colors.mutedForeground} />
+          </ScalePressable>
         </View>
       </View>
 
-      <View className="mb-3 h-[0.5px] bg-neutral-200" />
+      <View className="h-[0.8px] bg-border" />
 
       <View className="flex-row justify-between">
         {DAYS.map((day, index) => {
-          const selected = selectedDays.includes(index);
+          const selected = selectedDays.has(index);
           return (
-            <TouchableOpacity
-              key={index}
-              onPress={() => toggleDay(index)}
-              className={`h-9 w-9 items-center justify-center rounded-full ${
-                selected ? 'bg-blue-100' : 'bg-neutral-100'
-              }`}>
-              <Text
-                className={`text-[13px] ${
-                  selected ? 'font-medium text-blue-600' : 'text-neutral-400'
+            <ScalePressable key={index} onPress={() => toggleDay(index)}>
+              <View
+                className={`h-9 w-9 items-center justify-center rounded-full transition-colors duration-200 ${
+                  selected ? 'bg-teal-100 dark:bg-teal-900/50' : 'bg-card'
                 }`}>
-                {day}
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  className={`text-sm font-medium transition-colors duration-200 ${
+                    selected ? 'text-teal-700 dark:text-primary' : 'text-muted-foreground'
+                  }`}>
+                  {day}
+                </Text>
+              </View>
+            </ScalePressable>
           );
         })}
       </View>
