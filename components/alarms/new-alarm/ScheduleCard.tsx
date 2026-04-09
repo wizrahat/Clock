@@ -80,11 +80,11 @@ const DayButton = ({
   <ScalePressable onPress={() => onPress()}>
     <View
       className={`h-9 w-9 items-center justify-center rounded-full transition-colors duration-200 ${
-        isSelected ? 'bg-teal-100 dark:bg-teal-900/50' : 'bg-card'
+        isSelected ? 'bg-[#dbfaf6] dark:bg-teal-900/50' : 'bg-card' // temporary hardcoded color
       }`}>
       <Text
         className={`text-sm font-medium transition-colors duration-200 ${
-          isSelected ? 'text-teal-700 dark:text-primary' : 'text-muted-foreground'
+          isSelected ? 'text-teal-800 dark:text-primary' : 'text-muted-foreground'
         }`}>
         {day}
       </Text>
