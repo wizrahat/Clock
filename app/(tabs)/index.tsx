@@ -16,6 +16,7 @@ import { formatCountdown, getNextOccurrence, updateAlarm } from '@/lib/alarms';
 import { SCHEDULE_LABELS } from '@/lib/constants';
 import { Easing } from 'react-native-reanimated';
 import { router } from 'expo-router';
+import ScalePressable from '@/components/common/ScalePressable';
 
 type Props = {};
 export default function Alarms({}: Props) {
@@ -92,15 +93,14 @@ export default function Alarms({}: Props) {
           Alarms
         </Text>
         <View className="flex-row items-center justify-end gap-2.5">
-          <Button
-            onPress={() => router.push('/new-alarm')}
-            variant="ghost"
-            className="h-8 w-8 bg-card shadow-sm shadow-black/5">
-            <Plus color={colors.foreground} size={20} />
-          </Button>
-          <Button variant="ghost" className="h-8 w-8 bg-card shadow-sm shadow-black/5">
+          <ScalePressable onPress={() => router.push('/new-alarm')}>
+            {/* <Button variant="ghost" className="h-8 w-8 bg-card shadow-sm shadow-black/5"> */}
+            <Plus color={colors.foreground} size={22} />
+            {/* </Button> */}
+          </ScalePressable>
+          <ScalePressable>
             <EllipsisVertical color={colors.foreground} size={20} />
-          </Button>
+          </ScalePressable>
         </View>
       </View>
       <ScrollView
