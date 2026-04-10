@@ -13,15 +13,9 @@ import { formatTime } from '@/lib/utils';
 import { useDatabase } from '@/db/provider';
 import { useLiveQuery } from 'drizzle-orm/expo-sqlite';
 import { formatCountdown, getNextOccurrence, updateAlarm } from '@/lib/alarms';
-import {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetView,
-  useBottomSheetTimingConfigs,
-} from '@gorhom/bottom-sheet';
 import { SCHEDULE_LABELS } from '@/lib/constants';
 import { Easing } from 'react-native-reanimated';
-import { NewAlarmBottomSheet } from '@/components/alarms/new-alarm';
+import { router } from 'expo-router';
 
 type Props = {};
 export default function Alarms({}: Props) {
@@ -29,12 +23,7 @@ export default function Alarms({}: Props) {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   // HOOKS
-  const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { colors } = useColorScheme();
-  const animationConfigs = useBottomSheetTimingConfigs({
-    duration: 350, // change later if needed
-    easing: Easing.bezier(0.2, 0.8, 0.3, 1), // change later if needed
-  });
 
   // DATA
   const { data: alarms } = useLiveQuery(db.select().from(AlarmsTable));
@@ -104,7 +93,7 @@ export default function Alarms({}: Props) {
         </Text>
         <View className="flex-row items-center justify-end gap-2.5">
           <Button
-            onPress={() => bottomSheetRef.current?.present()}
+            onPress={() => router.push('/new-alarm')}
             variant="ghost"
             className="h-8 w-8 bg-card shadow-sm shadow-black/5">
             <Plus color={colors.foreground} size={20} />
@@ -115,14 +104,13 @@ export default function Alarms({}: Props) {
         </View>
       </View>
       <ScrollView
+        showsVerticalScrollIndicator={false}
         contentContainerClassName="gap-2.5"
         className="mt-2.5 flex-1 bg-background px-2.5">
         {alarms.map((alarm) => (
           <AlarmCard key={alarm.id} alarm={alarm} />
         ))}
-        {/* add some subtle teal hint */}
       </ScrollView>
-      <NewAlarmBottomSheet bottomSheetRef={bottomSheetRef} />
     </SafeAreaView>
   );
 }

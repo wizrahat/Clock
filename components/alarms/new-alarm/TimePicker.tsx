@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, useCallback } from 'react';
+import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Picker } from '@/components/ui/organisms/picker';
 import { useColorScheme } from '@/lib/useColorScheme';

@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useRef, useCallback } from 'react';
-import { View, StyleSheet, Text, ViewStyle } from 'react-native';
+import { View, StyleSheet, Text, ViewStyle, ScrollView } from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -9,12 +9,11 @@ import Animated, {
   runOnJS,
   useDerivedValue,
 } from 'react-native-reanimated';
-import { FlashList } from '@shopify/flash-list';
 import { Audio } from 'expo-av';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 
-const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
+const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
 export const Picker = memo(
   ({
@@ -104,9 +103,7 @@ export const Picker = memo(
             style={{ flex: 1 }}
           />
         }>
-        <AnimatedFlashList
-          data={items}
-          keyExtractor={(_, index) => index.toString() + items.toString()}
+        <AnimatedScrollView
           onScroll={onScroll}
           scrollEventThrottle={16}
           snapToInterval={effectiveItemHeight}
@@ -115,12 +112,12 @@ export const Picker = memo(
           showsVerticalScrollIndicator={false}
           style={{ backgroundColor: 'transparent' }}
           contentContainerStyle={{ paddingVertical: effectiveItemHeight * 2 }}
-          drawDistance={effectiveItemHeight * 6}
-          initialScrollIndex={initialIndex}
+          contentOffset={{ x: 0, y: initialIndex * effectiveItemHeight }}
           onMomentumScrollEnd={handleScrollSettle}
-          onScrollEndDrag={handleScrollSettle}
-          renderItem={({ item, index }) => (
+          onScrollEndDrag={handleScrollSettle}>
+          {items.map((item: string, index: number) => (
             <PickerItem
+              key={index}
               item={item}
               index={index}
               activeIndex={activeIndex}
@@ -130,8 +127,8 @@ export const Picker = memo(
               font={font}
               fontWeight={fontWeight}
             />
-          )}
-        />
+          ))}
+        </AnimatedScrollView>
       </MaskedView>
     );
   }
