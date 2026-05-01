@@ -21,8 +21,8 @@ export default function NewAlarmScreen() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setReady(true);
-      opacity.value = withTiming(1, { duration: 800, easing: Easing.bezierFn(0.25, 1, 0.5, 1) });
-      scale.value = withTiming(1, { duration: 500, easing: Easing.bezierFn(0.25, 1, 0.5, 1) });
+      opacity.value = withTiming(1, { duration: 1000, easing: Easing.bezierFn(0.25, 1, 0.5, 1) });
+      scale.value = withTiming(1, { duration: 1000, easing: Easing.bezierFn(0.25, 1, 0.5, 1) });
     }, 200);
     return () => clearTimeout(timer);
   }, []);

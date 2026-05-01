@@ -105,10 +105,10 @@ export default function RootLayout() {
                       transform: [{ scale }, { translateY: translateY + overdrag }],
                       borderRadius,
                       overflow: 'hidden',
-                      backgroundColor: '#121212',
+                      backgroundColor: '#121212', // temporary
                     },
                     backdropStyle: {
-                      backgroundColor: 'rgba(0,0,0,0.3)',
+                      backgroundColor: 'rgba(0,0,0,0.3)', // temporary
                       opacity: interpolate(progress, [0, 1], [0, 0.5]),
                     },
                   };

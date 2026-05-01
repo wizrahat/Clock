@@ -18,7 +18,7 @@ export function ThemeToggle() {
   return (
     <Pressable
       onPress={() => handleToggleTheme()}
-      className="ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      className="ring-offset-background transition-colors m-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
       {({ pressed }) => (
         <View

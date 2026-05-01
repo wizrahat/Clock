@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Picker } from '@/components/ui/organisms/picker';
+import { Picker } from '@/components/common/Picker';
 import { useColorScheme } from '@/lib/useColorScheme';
 
 type TimeFormat = '12' | '24';
