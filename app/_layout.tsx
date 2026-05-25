@@ -78,6 +78,9 @@ export default function RootLayout() {
 
                 gestureDirection: 'vertical',
                 gestureEnabled: true,
+                gestureActivationArea: {
+                  top: 'edge',
+                },
 
                 screenStyleInterpolator: ({
                   progress,
