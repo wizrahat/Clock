@@ -43,7 +43,7 @@ export const THEME = {
     accent: 'hsl(0 0% 14.9%)',
     accentForeground: 'hsl(0 0% 98%)',
     destructive: 'hsl(0 70.9% 59.4%)',
-    border: 'hsl(0 0% 14.9%)',
+    border: 'hsl(240 5% 26%)',
     input: 'hsl(0 0% 14.9%)',
     ring: 'hsl(300 0% 45%)',
     radius: '0.625rem',

@@ -46,8 +46,8 @@ export default function ScheduleCard({ onChange }: ScheduleCardProps) {
   );
 
   return (
-    <View className="flex-col gap-1.5 rounded-2xl border-[0.5px] border-border bg-card px-4 py-2">
-      <View className="mb-2 flex-row items-center justify-between">
+    <View className="flex-col gap-3 rounded-2xl border-[0.5px] border-border bg-card px-4 pb-3 pt-4">
+      <View className="-mt-1 flex-row items-center justify-between">
         <Text className="text-lg text-foreground" font="Poppins_500Medium">
           {isRepeat ? 'Repeat' : 'Custom'}
         </Text>
@@ -195,7 +195,7 @@ const DayButton = ({
       className={`h-[41.8px] w-[41.8px] items-center justify-center rounded-full transition-colors duration-200 ${
         isSelected
           ? 'border-[0.5px] border-teal-400 bg-teal-100 dark:border-teal-500 dark:bg-teal-900/40'
-          : 'border border-border dark:border-zinc-700' // temporary hardcoded color
+          : 'border border-border' // temporary hardcoded color
       }`}>
       <Text
         font={isSelected ? 'Poppins_600SemiBold' : 'Poppins_400Regular'}
