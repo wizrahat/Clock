@@ -193,12 +193,14 @@ const DayButton = ({
   <ScalePressable onPress={() => onPress()}>
     <View
       className={`h-[41.8px] w-[41.8px] items-center justify-center rounded-full transition-colors duration-200 ${
-        isSelected ? 'bg-[#c6fcf5] dark:bg-[rgb(2,51,49)]' : 'bg-card' // temporary hardcoded color
+        isSelected
+          ? 'border-[0.5px] border-teal-400 bg-teal-100 dark:border-teal-500 dark:bg-teal-900/40'
+          : 'border border-border dark:border-zinc-700' // temporary hardcoded color
       }`}>
       <Text
         font={isSelected ? 'Poppins_600SemiBold' : 'Poppins_400Regular'}
         className={`text-sm font-medium transition-colors duration-200 ${
-          isSelected ? 'text-teal-800 dark:text-primary' : 'text-foreground'
+          isSelected ? 'text-teal-700 dark:text-teal-300' : 'text-muted-foreground'
         }`}>
         {day}
       </Text>
